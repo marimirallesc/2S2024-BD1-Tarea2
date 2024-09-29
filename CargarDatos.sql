@@ -80,7 +80,7 @@ FROM @xmlDatos.nodes('/Datos/Error/error') AS Errores(Er);
 -- Primero se usa una tabla variable para cargar los datos del XML
 DECLARE @Empleado TABLE (	
 	Puesto VARCHAR(64)
-	, ValorDocumentoIdentidad VARCHAR(32)
+	, ValorDocumentoIdentidad INT
 	, Nombre VARCHAR(64)
 	, FechaContratacion DATE
 	);
@@ -91,7 +91,7 @@ INSERT @Empleado (
 	, FechaContratacion)
 SELECT
     E.value('@Puesto', 'VARCHAR(64)')
-    ,E.value('@ValorDocumentoIdentidad', 'VARCHAR(32)')
+    ,E.value('@ValorDocumentoIdentidad', 'INT')
     ,E.value('@Nombre', 'VARCHAR(64)')
     ,E.value('@FechaContratacion', 'DATE')
 FROM @xmlDatos.nodes('/Datos/Empleados/empleado') AS Empleados(E);
@@ -113,7 +113,7 @@ INNER JOIN dbo.Puesto P on E.Puesto = P.Nombre;
 -- Cargar los datos de Movimientos
 -- Primero se usa una tabla variable para cargar los datos del XML
 DECLARE @Movimiento TABLE (
-	ValorDocId VARCHAR(32)
+	ValorDocId INT
 	, IdTipoMovimiento VARCHAR(64)
 	, Fecha DATE
 	, Monto MONEY
@@ -130,7 +130,7 @@ INSERT @Movimiento (
 	, PostInIP
 	, PostTime)
 SELECT
-    M.value('@ValorDocId', 'VARCHAR(32)'),
+    M.value('@ValorDocId', 'INT'),
     M.value('@IdTipoMovimiento', 'VARCHAR(64)'),
     M.value('@Fecha', 'DATE'),
     M.value('@Monto', 'MONEY'),
