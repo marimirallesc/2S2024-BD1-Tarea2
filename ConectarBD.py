@@ -1,3 +1,4 @@
+from tkinter import NO
 import pyodbc
 
 class MssqlConnection:
@@ -17,16 +18,18 @@ class MssqlConnection:
             print(f"Connection error: {ex}")
             raise
     
-    # Lista los empleados, recibe un parametro opcional
-    # para buscar por nombre o identificacion
-    def listarEmpleados(self, buscar = ""): 
+    # Lista los empleados, recibe el id del usuario
+    # y un parametro opcional para buscar por nombre o identificacion
+    def listarEmpleados(self, userId, buscar = ""): 
         connect = self.connect_mssql()
         cursor = connect.cursor()       
-        cursor.execute("EXECUTE [dbo].[ListarEmpleados] @Buscar=?, @OutResult=0;", (buscar)) 
+        cursor.execute("EXECUTE [dbo].[ListarEmpleados] @UserId=?, @Buscar=?, @OutResult=0;"
+                       , (userId, buscar)) 
         result = cursor.fetchall()[0][0]
         if result == 0: 
             cursor.nextset()
-            empleados = cursor.fetchall()        
+            empleados = cursor.fetchall()   
+            connect.commit()
             cursor.close()
             connect.close()
             print('Empleados: ', empleados)
@@ -55,7 +58,43 @@ class MssqlConnection:
         else:   # Error en la BD
             cursor.close()
             connect.close()
-            return result    
+            return result
+        
+    # Lista los puestos
+    def listarPuestos(self): 
+        connect = self.connect_mssql()
+        cursor = connect.cursor()       
+        cursor.execute("EXECUTE [dbo].[ListarPuestos] @OutResult=0;")
+        result = cursor.fetchall()[0][0]
+        if result == 0: 
+            cursor.nextset()
+            puestos = cursor.fetchall()        
+            cursor.close()
+            connect.close()
+            print('Puestos: ', puestos)
+            return [{'Id': row[0], 'Nombre': row[1], 'SalarioxHora': row[2]} for row in puestos]
+        else:   # Error en la BD
+            cursor.close()
+            connect.close()
+            return result  
+
+    # Lista los tipos de movimientos
+    def listarTipoMovimientos(self): 
+        connect = self.connect_mssql()
+        cursor = connect.cursor()       
+        cursor.execute("EXECUTE [dbo].[ListarTipoMovimientos] @OutResult=0;")
+        result = cursor.fetchall()[0][0]
+        if result == 0: 
+            cursor.nextset()
+            movimientos = cursor.fetchall()        
+            cursor.close()
+            connect.close()
+            print('Tipo de movimientos: ', movimientos)
+            return [{'Id': row[0], 'Nombre': row[1], 'TipoAccion': row[2]} for row in movimientos]
+        else:   # Error en la BD
+            cursor.close()
+            connect.close()
+            return result  
 
     # Retorna la descripcion del error, recibe el codigo de un error
     def descripcionError(self, codigo): 
@@ -81,15 +120,55 @@ class MssqlConnection:
         cursor = connect.cursor()       
         cursor.execute("EXECUTE [dbo].[Login] @Username=?, @Password=?, @OutResult=0;"
                        , (username, password))    
+        result = cursor.fetchall()
+        connect.commit()
+        cursor.close()
+        connect.close()
+        print(result)
+        return result
+        # Login exitoso: return [(0, IdUsuario)]
+        # Si el usuario no existe: [(50001,)] 
+        # Si la contrase�a es incorrecta: [(50002,)]
+        # Login desabilitado: [(50003,)]
+
+    # Logout, recibe el id del usuario
+    def logout(self, userId): 
+        connect = self.connect_mssql()
+        cursor = connect.cursor()       
+        cursor.execute("EXECUTE [dbo].[Logout] @UserId=?, @OutResult=0;"
+                       , (userId))    
         result = cursor.fetchall()[0][0]
         connect.commit()
         cursor.close()
         connect.close()
         print(result)
         return result
-        # Retorna 0 si el usuario y contrase�a son correctos
-        # 50001 Si el usuario no existe
-        # 50002 si la contrase�a es incorrecta
+
+    # EliminarEmpleado, recibe el id del usuario y del empleado
+    def eliminarEmpleado(self, userId, empleadoId): 
+        connect = self.connect_mssql()
+        cursor = connect.cursor()       
+        cursor.execute("EXECUTE [dbo].[EliminarEmpleado] @UserId=?, @EmpleadoId=?, @OutResult=0;"
+                       , (userId, empleadoId))    
+        result = cursor.fetchall()[0][0]
+        connect.commit()
+        cursor.close()
+        connect.close()
+        print(result)
+        return result
+
+    # IntentoEliminarEmpleado, recibe el id del usuario y del empleado
+    def intentoEliminarEmpleado(self, userId, empleadoId): 
+        connect = self.connect_mssql()
+        cursor = connect.cursor()       
+        cursor.execute("EXECUTE [dbo].[IntentoEliminarEmpleado] @UserId=?, @EmpleadoId=?, @OutResult=0;"
+                       , (userId, empleadoId))    
+        result = cursor.fetchall()[0][0]
+        connect.commit()
+        cursor.close()
+        connect.close()
+        print(result)
+        return result
 
 
     # def insertarEmpleado(self, nombre, salario):
@@ -112,11 +191,17 @@ class MssqlConnection:
 if __name__ == '__main__':
     # Ejemplo de uso
     x = MssqlConnection()
-    nombre = '1'
+    nombre = 'a'
 
-    #x.listarEmpleados(nombre)
-    #x.listarMovimientos(nombre)
+    x.intentoEliminarEmpleado(1, 1)
+    #x.eliminarEmpleado(1, 12)
+    #x.listarEmpleados(1)
+    #x.listarEmpleados(1, nombre)
+    #x.listarMovimientos(1)
+    #x.listarPuestos()
+    #x.listarTipoMovimientos()
     #x.descripcionError(50007)
-    x.login('UsuarioScripts', 'UsuarioScripts')
+    #x.login('UsuarioScripts', 'UsuarioScripts')
     #x.login('mgarrison', 'sdv')
+    #x.logout(1)
     
