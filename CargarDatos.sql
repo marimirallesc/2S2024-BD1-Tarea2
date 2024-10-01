@@ -1,10 +1,12 @@
 -- Script para Cargar los Datos de la Segunda Tarea Programada BD1
-
+USE[BD_SegundaTarea]
 -- Borra los Datos existentes y reinicia Ids
 DELETE dbo.Movimiento;
 DBCC CHECKIDENT ('Movimiento', RESEED, 0);
 DELETE dbo.Empleado;
 DBCC CHECKIDENT ('Empleado', RESEED, 0);
+DELETE dbo.BitacoraEvento;
+DBCC CHECKIDENT ('BitacoraEvento', RESEED, 0);
 DELETE dbo.Puesto;
 DBCC CHECKIDENT ('Puesto', RESEED, 0);	
 DELETE dbo.TipoEvento;

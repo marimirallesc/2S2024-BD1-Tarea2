@@ -22,8 +22,9 @@ class MssqlConnection:
     def listarEmpleados(self, buscar = ""): 
         connect = self.connect_mssql()
         cursor = connect.cursor()       
-        cursor.execute("EXECUTE [dbo].[ListarEmpleados] @Buscar=?, @OutResult=0;", (buscar))    
-        if cursor.fetchall()[0][0] == 0: 
+        cursor.execute("EXECUTE [dbo].[ListarEmpleados] @Buscar=?, @OutResult=0;", (buscar)) 
+        result = cursor.fetchall()[0][0]
+        if result == 0: 
             cursor.nextset()
             empleados = cursor.fetchall()        
             cursor.close()
@@ -34,14 +35,15 @@ class MssqlConnection:
         else:   # Error en la BD
             cursor.close()
             connect.close()
-            return 50008    
+            return result    
 
     # Lista los movimientos de un empleado, recibe el id de un empleado
     def listarMovimientos(self, id): 
         connect = self.connect_mssql()
         cursor = connect.cursor()       
-        cursor.execute("EXECUTE [dbo].[ListarMovimientos] @IdEmpleado=?, @OutResult=0;", (id))    
-        if cursor.fetchall()[0][0] == 0: 
+        cursor.execute("EXECUTE [dbo].[ListarMovimientos] @IdEmpleado=?, @OutResult=0;", (id))
+        result = cursor.fetchall()[0][0]
+        if result == 0: 
             cursor.nextset()
             movimientos = cursor.fetchall()        
             cursor.close()
@@ -53,24 +55,42 @@ class MssqlConnection:
         else:   # Error en la BD
             cursor.close()
             connect.close()
-            return 50008    
+            return result    
 
-    # Obtiene la descripcion del error, recibe el codigo de un error
+    # Retorna la descripcion del error, recibe el codigo de un error
     def descripcionError(self, codigo): 
         connect = self.connect_mssql()
         cursor = connect.cursor()       
-        cursor.execute("EXECUTE [dbo].[DescripcionError] @Codigo=?, @OutResult=0;", (codigo))    
-        if cursor.fetchall()[0][0] == 0: 
+        cursor.execute("EXECUTE [dbo].[DescripcionError] @Codigo=?, @OutResult=0;", (codigo)) 
+        result = cursor.fetchall()[0][0]
+        if result == 0: 
             cursor.nextset()
-            error = cursor.fetchall()        
+            descripcionError = cursor.fetchall()[0][0]        
             cursor.close()
             connect.close()
-            print(error[0][0])
-            return error[0][0]
+            print(descripcionError)
+            return descripcionError
         else:   # Error en la BD
             cursor.close()
             connect.close()
-            return 'Error en la base de datos'   
+            return 'Error en la base de datos ' + result   
+
+    # Login, recibe el nombre de usuario y contrase�a
+    def login(self, username, password): 
+        connect = self.connect_mssql()
+        cursor = connect.cursor()       
+        cursor.execute("EXECUTE [dbo].[Login] @Username=?, @Password=?, @OutResult=0;"
+                       , (username, password))    
+        result = cursor.fetchall()[0][0]
+        connect.commit()
+        cursor.close()
+        connect.close()
+        print(result)
+        return result
+        # Retorna 0 si el usuario y contrase�a son correctos
+        # 50001 Si el usuario no existe
+        # 50002 si la contrase�a es incorrecta
+
 
     # def insertarEmpleado(self, nombre, salario):
     #     try:
@@ -91,14 +111,12 @@ class MssqlConnection:
 
 if __name__ == '__main__':
     # Ejemplo de uso
-
     x = MssqlConnection()
-
     nombre = '1'
-    #salario = 500000
-    #conexion.insertarEmpleado(nombre, salario)
-    #empleados = conexion.listarEmpleados()
+
     #x.listarEmpleados(nombre)
     #x.listarMovimientos(nombre)
-    x.descripcionError(50007)
+    #x.descripcionError(50007)
+    x.login('UsuarioScripts', 'UsuarioScripts')
+    #x.login('mgarrison', 'sdv')
     
