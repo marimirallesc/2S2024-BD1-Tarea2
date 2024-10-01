@@ -1,7 +1,9 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, redirect, url_for, flash
 from ConectarBD import MssqlConnection
 
 app = Flask(__name__)
+
+app.secret_key = '0000'
 
 @app.route('/login/')
 def login():
@@ -31,23 +33,25 @@ def editar():
     ]
 
     return render_template('editar.html', empleado=empleado, puestos=puestos)
+    
+@app.route('/consultar/<int:id>', methods=['GET'])
+def consultar_empleado(id):
+    try:
+        db = MssqlConnection()
+        empleado = db.listarEmpleados(buscar=str(id))  # Busca el empleado por el ID
 
-@app.route('/consultar/')
-def consultar():
-    # Pasar un empleado ficticio para evitar el error
-    empleado = {
-        'Nombre': '',
-        'IdPuesto': 1
-    }
+        # Verificar si se obtuvo un resultado válido
+        if empleado and len(empleado) > 0:
+            # Si se encuentra el empleado, renderiza la página de consulta
+            return render_template('consultar.html', empleado=empleado[0])
+        else:
+            # Si no se encuentra el empleado, redirigir al index con un mensaje de error
+            return render_template('index.html', error="Empleado no encontrado")
+    except Exception as e:
+        print(f"Error al obtener empleado: {e}")
+        # Si ocurre un error inesperado, redirigir al index con un mensaje de error
+        return render_template('index.html', error="Error al obtener empleado")
 
-    # Pasar también una lista ficticia de puestos
-    puestos = [
-        {'id': 1, 'nombre': 'Gerente'},
-        {'id': 2, 'nombre': 'Asistente'},
-        {'id': 3, 'nombre': 'Desarrollador'}
-    ]
-
-    return render_template('consultar.html', empleado=empleado, puestos=puestos)
 
 # Rutas existentes
 @app.route('/listar_empleados', methods=['GET'])

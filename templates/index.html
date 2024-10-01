@@ -10,7 +10,6 @@
 <body>
     <div class="container">
         <h1>Listado de Empleados</h1>
-
         <button onclick="window.location.href='/login'">Logout</button>
         <br></br>
 
@@ -42,5 +41,9 @@
             </tbody>
         </table>
     </div>
+     <!-- Si existe un error, lo pasamos como un input oculto -->
+    {% if error %}
+    <input type="hidden" id="errorMessage" value="{{ error }}">
+    {% endif %}
 </body>
 </html>
