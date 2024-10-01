@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listado de Empleados</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="{{ url_for('static', filename='empleados.js') }}" defer></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Listado de Empleados</h1>
+
+        <button onclick="window.location.href='/login'">Logout</button>
+        <br></br>
+
+        <form id="buscarForm">
+            <label for="buscar">Buscar empleado:</label>
+            <input type="text" id="buscar" name="buscar" required>
+
+            <div class="buttons">
+                <button onclick="window.location.href='/'">Buscar</button>
+            </div>
+        </form>
+
+        <button onclick="window.location.href='/insertar'">Insertar Empleado</button>
+        <br></br>
+
+        <table class="employee-table">
+            <thead>
+                <tr>
+                    <th>Documento de Identidad</th>
+                    <th>Nombre</th>
+                    <th>Puesto</th>
+                    <th>Fecha de Contratación</th>
+                    <th>Saldo de Vacaciones</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="employeeTableBody">
+                <!-- Filas generadas dinámicamente -->
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

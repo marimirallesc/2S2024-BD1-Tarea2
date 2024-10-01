@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consultar Empleado</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Detalles del Empleado</h1>
+        <p><strong>Documento de Identidad:</strong> {{ empleado.ValorDocumentoIdentidad }}</p>
+        <p><strong>Nombre:</strong> {{ empleado.Nombre }}</p>
+        <p><strong>Puesto:</strong> {{ empleado.Puesto }}</p>
+        <p><strong>Saldo de Vacaciones:</strong> {{ empleado.SaldoVacaciones }}</p>
+        <button onclick="window.location.href='/';">Volver</button>
+    </div>
+</body>
+</html>
