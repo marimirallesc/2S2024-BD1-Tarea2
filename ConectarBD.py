@@ -213,7 +213,7 @@ class MssqlConnection:
 if __name__ == '__main__':
     # Ejemplo de uso
     x = MssqlConnection()
-    nombre = 1
+    nombre = 'vcvc'
 
     x.insertarMovimiento(1, 1, 5, 5)
     #x.editarEmpleado(1, 4, '896', 'Jensen', 6 )
