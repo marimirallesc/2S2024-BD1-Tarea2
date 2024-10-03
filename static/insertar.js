@@ -11,15 +11,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;     // Si las validaciones fallan, detener la ejecucion
             }
 
+            const user = 1; //document.getElementById('userId').value;
             const nombre = document.getElementById('nombre').value;
-            const salario = document.getElementById('salario').value;
+            const puesto = document.getElementById('puesto').value;
+            const vdi = document.getElementById('empleadoId').value;
 
             const response = await fetch('/insertar_empleado', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ nombre, salario })
+                body: JSON.stringify({ user, nombre, puesto, vdi })
             });
 
             const result = await response.json();

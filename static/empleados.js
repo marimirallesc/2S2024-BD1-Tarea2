@@ -5,8 +5,9 @@ document.addEventListener('DOMContentLoaded', function() {
         alert(errorMessage.value);  // Muestra la alerta con el mensaje de error
         window.location.href = '/';  // Redirige al index.html
     }
-
-    fetch('/listar_empleados')
+    const userId = 1;
+    console.log(`Fetching empleados for userId: ${userId}`);
+    fetch(`/listar_empleados/${userId}`)
         .then(response => response.json())
         .then(empleados => {
             const tbody = document.getElementById('employeeTableBody');
@@ -22,9 +23,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     <td>${empleado.FechaContratacion}</td>
                     <td>${empleado.SaldoVacaciones}</td>
                     <td>
-                        <button onclick="window.location.href='/consultar/${empleado.ValorDocumentoIdentidad}'">Consultar</button>
+                        <button onclick="window.location.href='/consultar/${userId}/${empleado.ValorDocumentoIdentidad}'">Consultar</button>
                         <br></br>            
-                        <button onclick="window.location.href='/editar/${empleado.Id}'">Editar</button>
+                        <button onclick="window.location.href='/editar/${userId}/${empleado.ValorDocumentoIdentidad}'">Editar</button>
                         <button onclick="eliminarEmpleado(${empleado.Id}, '${empleado.Nombre}', '${empleado.ValorDocumentoIdentidad}')">Eliminar</button>
                     </td>
                 `;
@@ -33,6 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         })
         .catch(error => {
+            //alert('Error fetching employee list.');
             console.error('Error fetching employee list:', error);
         });
 });
@@ -45,16 +47,18 @@ function eliminarEmpleado(id, nombre, documento) {
         fetch(`/eliminar/${id}`, {
             method: 'POST'
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.message) {
-                alert(data.message);
-                location.reload();  // Recargar la página para actualizar la lista
-            } else {
-                alert('Error al eliminar el empleado');
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(data => { throw new Error(data.message); });
             }
+            return response.json();
+        })
+        .then(data => {
+            alert(data.message);
+            location.reload();  // Recargar la página para actualizar la lista
         })
         .catch(error => {
+            alert('Error al eliminar el empleado: ' + error.message);
             console.error('Error al eliminar el empleado:', error);
         });
     }

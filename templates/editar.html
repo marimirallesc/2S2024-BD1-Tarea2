@@ -6,30 +6,34 @@
     <title>Editar Empleado</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <script src="{{ url_for('static', filename='validaciones.js') }}" defer></script>
-    <!-- <script src="{{ url_for('static', filename='editar.js') }}" defer></script> -->
+    <script src="{{ url_for('static', filename='editar.js') }}" defer></script>
 </head>
 <body>
     <div class="container">
         <h1>Editar Empleado</h1>
-        <form id="editForm">
+        <form id="editForm" method="POST" action="/actualizar_empleado">
+            <input type="hidden" id="userId" name="userId" value="{{ userId }}" required>
+            <input type="hidden" id="empleadoId" name="empleadoId" value="{{ empleado.ValorDocumentoIdentidad }}" required>
+
             <label for="nombre">Documento de Identidad:</label>
-            <input type="text" id="vdi" name="vdi" value="{{ empleado.ValorDocumentoIdentidad }}" required>
+            <input type="text" id="identificacion" name="identificacion" value="{{ empleado.ValorDocumentoIdentidad }}" required>
             <label for="nombre">Nombre:</label>
             <input type="text" id="nombre" name="nombre" value="{{ empleado.Nombre }}" required>
             
             <label for="puesto">Puesto:</label>
+            <input type="hidden" id="puestos" name="puestos" value="{{ puestos }}" required>
             <select id="puesto" name="puesto" required>
-                <!-- Opciones generadas dinámicamente desde el servidor -->
                 {% for puesto in puestos %}
-                <option value="{{ puesto.id }}" {% if puesto.id == empleado.IdPuesto %}selected{% endif %}>{{ puesto.nombre }}</option>
+                <option value="{{ puesto.Id }}" {% if puesto.Nombre == empleado.Puesto %}selected{% endif %}>{{ puesto.Nombre }}</option>
                 {% endfor %}
             </select>
-
+            
             <div class="buttons">
-                <button type="submit" >Guardar Cambios</button>
+                <button type="submit">Guardar Cambios</button>
                 <button type="button" onclick="window.location.href='/';">Cancelar</button>
             </div>
         </form>
+        
     </div>
 </body>
 </html>
