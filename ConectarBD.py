@@ -114,7 +114,7 @@ class MssqlConnection:
             connect.close()
             return 'Error en la base de datos ' + result   
 
-    # Login, recibe el nombre de usuario y contrase�a
+    # Login, recibe el nombre de usuario y contrasena
     def login(self, username, password): 
         connect = self.connect_mssql()
         cursor = connect.cursor()       
@@ -128,7 +128,7 @@ class MssqlConnection:
         return result
         # Login exitoso: return [(0, IdUsuario)]
         # Si el usuario no existe: [(50001,)] 
-        # Si la contrase�a es incorrecta: [(50002,)]
+        # Si la contrasena es incorrecta: [(50002,)]
         # Login desabilitado: [(50003,)]
 
     # Logout, recibe el id del usuario
@@ -196,18 +196,31 @@ class MssqlConnection:
         print(result)
         return result
 
+    # InsertarMovimiento, recibe el id del usuario y identificacion, nombre y id del puesto del empleado
+    def insertarMovimiento(self, idUsuario, idEmpleado, idTipoMovimiento, monto): 
+        connect = self.connect_mssql()
+        cursor = connect.cursor()       
+        cursor.execute("EXECUTE [dbo].[InsertarMovimiento] @idUsuario=?, @idEmpleado=?, @idTipoMovimiento=?, @monto=?, @OutResult=0;"
+                       , (idUsuario, idEmpleado, idTipoMovimiento, monto))    
+        result = cursor.fetchall()[0][0]
+        connect.commit()
+        cursor.close()
+        connect.close()
+        print(result)
+        return result
+
 
 if __name__ == '__main__':
     # Ejemplo de uso
     x = MssqlConnection()
-    nombre = 1
+    nombre = 'vcvc'
 
+    x.insertarMovimiento(1, 1, 5, 5)
     #x.editarEmpleado(1, 4, '896', 'Jensen', 6 )
     #x.insertarEmpleado(1, '2433', 'Alan', 2 )
     #x.intentoEliminarEmpleado(1, 2)
     #x.eliminarEmpleado(1, 12)
-    ss=x.listarEmpleados(1)
-
+    #x.listarEmpleados(1)
     #x.listarEmpleados(1, nombre)
     #x.listarMovimientos(1)
     #x.listarPuestos()
