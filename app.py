@@ -57,8 +57,9 @@ def consultar_empleado(id):
 @app.route('/listar_empleados', methods=['GET'])
 def listar_empleados():
     try:
+        userid=1
         db = MssqlConnection()
-        empleados = db.listarEmpleados()
+        empleados = db.listarEmpleados(userid)
         if empleados == 50005:  #Error en la BD
             raise Exception("Lista de empleados no disponible")
         else:
