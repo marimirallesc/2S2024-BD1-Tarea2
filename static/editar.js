@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }*/
 
             const user = document.getElementById('userId').value;
-            const vdi = document.getElementById('empleadoId').value;
+            const empleadoId = document.getElementById('empleadoId').value;
             const nombre = document.getElementById('nombre').value;
             const puesto = document.getElementById('puesto').value;
             const identificacion = document.getElementById('identificacion').value;
@@ -23,13 +23,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 return; // Si la validación falla, detener el proceso
             }
 
+            // Imprimir los datos que se están enviando
+            console.log('Datos enviados:', { user, empleadoId, identificacion , nombre, puesto});
+
             const response = await fetch(`/actualizar_empleado`, { 
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ user, vdi, nombre, puesto, identificacion })
+                body: JSON.stringify({ user, empleadoId, nombre, puesto, identificacion })
             });
+
 
             if (!response.ok) {
                 const errorText = await response.text(); // Ver el texto de la respuesta del servidor en caso de error

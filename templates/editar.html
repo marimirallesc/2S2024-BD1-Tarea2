@@ -13,7 +13,7 @@
         <h1>Editar Empleado</h1>
         <form id="editForm" method="POST" action="/actualizar_empleado">
             <input type="hidden" id="userId" name="userId" value="{{ userId }}" required>
-            <input type="hidden" id="empleadoId" name="empleadoId" value="{{ empleado.ValorDocumentoIdentidad }}" required>
+            <input type="hidden" id="empleadoId" name="empleadoId" value="{{ empleado.Id }}" required>
 
             <label for="nombre">Documento de Identidad:</label>
             <input type="text" id="identificacion" name="identificacion" value="{{ empleado.ValorDocumentoIdentidad }}" required>

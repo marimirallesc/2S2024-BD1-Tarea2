@@ -49,14 +49,14 @@ def actualizar_empleado():
     try:
         data = request.get_json()  # Obtener los datos JSON del cuerpo de la solicitud
         userId = data['user']       # Acceder a los datos correctamente
-        vdi = data['vdi']
+        empleadoId = data['empleadoId']
         nombre = data['nombre']
         puestoIndex = data['puesto']
         identificacion = data['identificacion']
 
         db = MssqlConnection()
         
-        db.editarEmpleado(userId, vdi, identificacion, nombre, puestoIndex)
+        db.editarEmpleado(userId, empleadoId, identificacion, nombre, puestoIndex)
         
         return {'success': True}  # Devuelve un objeto JSON en caso de éxito
     except Exception as e:
