@@ -20,11 +20,11 @@ class MssqlConnection:
     
     # Lista los empleados, recibe el id del usuario
     # y un parametro opcional para buscar por nombre o identificacion
-    def listarEmpleados(self, userId, buscar = ""): 
+    def listarEmpleados(self, idUsuario, buscar = ""): 
         connect = self.connect_mssql()
         cursor = connect.cursor()       
-        cursor.execute("EXECUTE [dbo].[ListarEmpleados] @UserId=?, @Buscar=?, @OutResult=0;"
-                       , (userId, buscar)) 
+        cursor.execute("EXECUTE [dbo].[ListarEmpleados] @idUsuario=?, @Buscar=?, @OutResult=0;"
+                       , (idUsuario, buscar)) 
         result = cursor.fetchall()[0][0]
         if result == 0: 
             cursor.nextset()
@@ -41,10 +41,10 @@ class MssqlConnection:
             return result    
 
     # Lista los movimientos de un empleado, recibe el id de un empleado
-    def listarMovimientos(self, id): 
+    def listarMovimientos(self, idEmpleado): 
         connect = self.connect_mssql()
         cursor = connect.cursor()       
-        cursor.execute("EXECUTE [dbo].[ListarMovimientos] @IdEmpleado=?, @OutResult=0;", (id))
+        cursor.execute("EXECUTE [dbo].[ListarMovimientos] @idEmpleado=?, @OutResult=0;", (idEmpleado))
         result = cursor.fetchall()[0][0]
         if result == 0: 
             cursor.nextset()
@@ -132,11 +132,11 @@ class MssqlConnection:
         # Login desabilitado: [(50003,)]
 
     # Logout, recibe el id del usuario
-    def logout(self, userId): 
+    def logout(self, idUsuario): 
         connect = self.connect_mssql()
         cursor = connect.cursor()       
-        cursor.execute("EXECUTE [dbo].[Logout] @UserId=?, @OutResult=0;"
-                       , (userId))    
+        cursor.execute("EXECUTE [dbo].[Logout] @idUsuario=?, @OutResult=0;"
+                       , (idUsuario))    
         result = cursor.fetchall()[0][0]
         connect.commit()
         cursor.close()
@@ -145,11 +145,11 @@ class MssqlConnection:
         return result
 
     # EliminarEmpleado, recibe el id del usuario y del empleado
-    def eliminarEmpleado(self, userId, empleadoId): 
+    def eliminarEmpleado(self, idUsuario, idEmpleado): 
         connect = self.connect_mssql()
         cursor = connect.cursor()       
-        cursor.execute("EXECUTE [dbo].[EliminarEmpleado] @UserId=?, @EmpleadoId=?, @OutResult=0;"
-                       , (userId, empleadoId))    
+        cursor.execute("EXECUTE [dbo].[EliminarEmpleado] @idUsuario=?, @idEmpleado=?, @OutResult=0;"
+                       , (idUsuario, idEmpleado))    
         result = cursor.fetchall()[0][0]
         connect.commit()
         cursor.close()
@@ -158,11 +158,37 @@ class MssqlConnection:
         return result
 
     # IntentoEliminarEmpleado, recibe el id del usuario y del empleado
-    def intentoEliminarEmpleado(self, userId, empleadoId): 
+    def intentoEliminarEmpleado(self, idUsuario, idEmpleado): 
         connect = self.connect_mssql()
         cursor = connect.cursor()       
-        cursor.execute("EXECUTE [dbo].[IntentoEliminarEmpleado] @UserId=?, @EmpleadoId=?, @OutResult=0;"
-                       , (userId, empleadoId))    
+        cursor.execute("EXECUTE [dbo].[IntentoEliminarEmpleado] @idUsuario=?, @idEmpleado=?, @OutResult=0;"
+                       , (idUsuario, idEmpleado))    
+        result = cursor.fetchall()[0][0]
+        connect.commit()
+        cursor.close()
+        connect.close()
+        print(result)
+        return result
+
+    # InsertarEmpleado, recibe el id del usuario y identificacion, nombre y id del puesto del empleado
+    def insertarEmpleado(self, idUsuario, identificacion, nombre, idPuesto): 
+        connect = self.connect_mssql()
+        cursor = connect.cursor()       
+        cursor.execute("EXECUTE [dbo].[InsertarEmpleado] @idUsuario=?, @Identificacion=?, @Nombre=?, @idPuesto=?, @OutResult=0;"
+                       , (idUsuario, identificacion, nombre, idPuesto))    
+        result = cursor.fetchall()[0][0]
+        connect.commit()
+        cursor.close()
+        connect.close()
+        print(result)
+        return result
+
+    # EditarEmpleado, recibe el id del usuario y id, identificacion, nombre y id del puesto del empleado
+    def editarEmpleado(self, idUsuario, idEmpleado, identificacion, nombre, idPuesto): 
+        connect = self.connect_mssql()
+        cursor = connect.cursor()       
+        cursor.execute("EXECUTE [dbo].[EditarEmpleado] @idUsuario=?, @idEmpleado=?, @NewIdentificacion=?, @NewNombre=?, @NewidPuesto=?, @OutResult=0;"
+                       , (idUsuario, idEmpleado, identificacion, nombre, idPuesto))    
         result = cursor.fetchall()[0][0]
         connect.commit()
         cursor.close()
@@ -171,31 +197,17 @@ class MssqlConnection:
         return result
 
 
-    # def insertarEmpleado(self, nombre, salario):
-    #     try:
-    #         connect = self.connect_mssql()
-    #         cursor = connect.cursor()
-    #         cursor.execute("""
-    #             EXECUTE [dbo].[InsertarEmpleado] @inNombre=?, @inSalario=?, @OutResult=0;
-    #             """, (nombre, salario))
-    #         resultado = cursor.fetchall()[0][0]
-    #         connect.commit()
-    #         cursor.close()
-    #         connect.close()
-    #         # Retorna 0 si todo fue exitoso o 50006 si el Empleado ya existe
-    #         return  resultado
-    #     except pyodbc.Error as ex:
-    #         print(f"Error inserting employee: {ex}")
-    #         return -1  # Retorna -1 si hubo un error
-
 if __name__ == '__main__':
     # Ejemplo de uso
     x = MssqlConnection()
-    nombre = 'a'
+    nombre = 1
 
-    x.intentoEliminarEmpleado(1, 1)
+    #x.editarEmpleado(1, 4, '896', 'Jensen', 6 )
+    #x.insertarEmpleado(1, '2433', 'Alan', 2 )
+    #x.intentoEliminarEmpleado(1, 2)
     #x.eliminarEmpleado(1, 12)
-    #x.listarEmpleados(1)
+    ss=x.listarEmpleados(1)
+
     #x.listarEmpleados(1, nombre)
     #x.listarMovimientos(1)
     #x.listarPuestos()
