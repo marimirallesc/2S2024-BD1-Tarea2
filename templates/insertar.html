@@ -12,12 +12,21 @@
     <div class="container">
         <h1>Insertar</h1>
         <form id="insertForm">
+            <input type="hidden" id="userId" name="userId" value="{{ userId }}" required>
+
             <label for="nombre">Documento de Identidad:</label>
             <input type="text" id="vdi" name="vdi" required>
+
             <label for="nombre">Nombre:</label>
             <input type="text" id="nombre" name="nombre" required>
+
             <label for="puesto">Puesto:</label>
-            <input type="text" id="puesto" name="puesto" required>            
+            <input type="hidden" id="puestos" name="puestos" value="{{ puestos }}" required>
+            <select id="puesto" name="puesto" required>
+                {% for puesto in puestos %}
+                <option value="{{ puesto.Id }}">{{ puesto.Nombre }}</option>
+                {% endfor %}
+            </select>                    
             
             <div class="buttons">
                 <button type="submit">Insertar Empleado</button>

@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
         alert(errorMessage.value);  // Muestra la alerta con el mensaje de error
         window.location.href = '/';  // Redirige al index.html
     }
-    const userId = 1;
+    const userId = document.getElementById('userId').value;
     console.log(`Fetching empleados for userId: ${userId}`);
     fetch(`/listar_empleados/${userId}`)
         .then(response => response.json())

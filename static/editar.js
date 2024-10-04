@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // Imprimir los datos que se están enviando
-            console.log('Datos enviados:', { user, empleadoId, identificacion , nombre, puesto});
+            //console.log('Datos enviados:', { user, empleadoId, identificacion , nombre, puesto});
 
             const response = await fetch(`/actualizar_empleado`, { 
                 method: 'POST',

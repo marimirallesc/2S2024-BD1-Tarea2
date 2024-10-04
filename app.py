@@ -11,11 +11,63 @@ def login():
 
 @app.route('/')
 def index():
-    return render_template('index.html') 
+    userId = 1;
+    return render_template('index.html', userId=userId) 
 
-@app.route('/insertar/')
-def insertar():
-    return render_template('insertar.html')
+@app.route('/insertar/<int:userId>')
+def insertar(userId):
+    db = MssqlConnection()
+    puestos = db.listarPuestos()
+    return render_template('insertar.html', userId=userId, puestos=puestos)
+
+@app.route('/listar_empleados/<int:userId>', methods=['GET'])
+def listar_empleados(userId):
+    try:
+        db = MssqlConnection()
+        empleados = db.listarEmpleados(userId)
+        if empleados == 50005:  # Error en la BD
+            raise Exception("Lista de empleados no disponible")
+        return jsonify(empleados)
+    except Exception as e:
+        print(f"Error al listar empleados: {e}")
+        return jsonify({'error': str(e)}), 500  # Devuelve un código de error adecuado
+
+@app.route('/insertar_empleado', methods=['POST'])
+def insertar_empleado():
+    try:
+        data = request.json
+        user = data.get('user')
+        nombre = data.get('nombre')
+        puesto = data.get('puesto')
+        vdi = data.get('vdi')
+        
+        db = MssqlConnection()
+        resultado = db.insertarEmpleado(user, vdi, nombre, puesto)
+        
+        if resultado == 0:
+            return jsonify({'success': True})
+        elif resultado == 50006:
+            return jsonify({'success': False, 'message': 'El empleado ya existe'})
+        else:
+            return jsonify({'success': False, 'message': 'Error al insertar el empleado'})
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)})
+    
+@app.route('/consultar/<int:userId>/<int:empleado_id>', methods=['GET'])
+def consultar_empleado(userId, empleado_id):
+    try:
+        db = MssqlConnection()
+        empleado = db.listarEmpleados(userId, buscar=str(empleado_id))  # Busca el empleado por el ID
+
+        # Verificar si se obtuvo un resultado válido
+        if empleado and len(empleado) > 0:
+            return render_template('consultar.html', empleado=empleado[0])
+        else:
+            return render_template('index.html', error="Empleado no encontrado")
+    except Exception as e:
+        print(f"Error al obtener empleado: {e}")
+        return render_template('index.html', error="Error al obtener empleado")
+
 
 @app.route('/editar/<int:userId>/<int:empleado_id>', methods=['GET'])
 def editar_empleado(userId, empleado_id):
@@ -81,54 +133,6 @@ def eliminar_empleado(empleado_id):
     except Exception as e:
         print(f"Error al eliminar empleado: {e}")
         return jsonify({'message': 'Error en el servidor.'}), 500
-
-@app.route('/listar_empleados/<int:userId>', methods=['GET'])
-def listar_empleados(userId):
-    try:
-        db = MssqlConnection()
-        empleados = db.listarEmpleados(userId)
-        if empleados == 50005:  # Error en la BD
-            raise Exception("Lista de empleados no disponible")
-        return jsonify(empleados)
-    except Exception as e:
-        print(f"Error al listar empleados: {e}")
-        return jsonify({'error': str(e)}), 500  # Devuelve un código de error adecuado
-
-@app.route('/insertar_empleado', methods=['POST'])
-def insertar_empleado():
-    try:
-        data = request.json
-        nombre = data.get('nombre')
-        puesto = data.get('puesto')
-        vdi = data.get('vdi')
-        
-        db = MssqlConnection()
-        resultado = db.insertarEmpleado(vdi, nombre, puesto)
-        
-        if resultado == 0:
-            return jsonify({'success': True})
-        elif resultado == 50006:
-            return jsonify({'success': False, 'message': 'El empleado ya existe'})
-        else:
-            return jsonify({'success': False, 'message': 'Error al insertar el empleado'})
-    except Exception as e:
-        return jsonify({'success': False, 'message': str(e)})
-    
-@app.route('/consultar/<int:userId>/<int:empleado_id>', methods=['GET'])
-def consultar_empleado(userId, empleado_id):
-    try:
-        db = MssqlConnection()
-        empleado = db.listarEmpleados(userId, buscar=str(empleado_id))  # Busca el empleado por el ID
-
-        # Verificar si se obtuvo un resultado válido
-        if empleado and len(empleado) > 0:
-            return render_template('consultar.html', empleado=empleado[0])
-        else:
-            return render_template('index.html', error="Empleado no encontrado")
-    except Exception as e:
-        print(f"Error al obtener empleado: {e}")
-        return render_template('index.html', error="Error al obtener empleado")
-
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -22,7 +22,14 @@
             </div>
         </form>
 
-        <button onclick="window.location.href='/insertar/'">Insertar Empleado</button>
+        <input type="hidden" id="userId" name="userId" value="{{ userId }}" required>
+        <button onclick="insertarEmpleado()">Insertar Empleado</button>
+        <script>
+            function insertarEmpleado() {
+                const userId = document.getElementById('userId').value;
+                window.location.href = `/insertar/${userId}`;
+            }
+        </script>        
         <br></br>
 
         <table class="employee-table">
