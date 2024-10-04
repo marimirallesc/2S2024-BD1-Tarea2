@@ -21,7 +21,10 @@ def login_empleado():
         # Verificar si la consulta devolvió algún resultado
         if usuario and len(usuario) > 0:
             user = usuario[0]  # Accede a la primera fila del resultado (suponiendo que es una lista de filas)
-            userId = user[0]  # Aquí, 0 es el índice que representa el 'Id' del usuario en la fila
+            userId = user[1]  # Aquí, 0 es el índice que representa el 'Id' del usuario en la fila
+            #print('usuario', usuario)
+            #print('user', user)
+            #print('userId', userId)
             return jsonify({'success': True, 'userId': userId})
         else:
             return jsonify({'success': False, 'message': "Credenciales incorrectas"}), 401
@@ -37,10 +40,10 @@ def logout_empleado():
         usuario = db.logout(userId)
         
         # Verificar si la consulta devolvió algún resultado
-        if usuario and len(usuario) > 0:
+        if usuario == 0:
             return jsonify({'success': True, 'userId': userId})
         else:
-            return jsonify({'success': False, 'message': "Credenciales incorrectas"}), 401
+            return jsonify({'success': False, 'message': "Credenciales incorrectas."}), 401
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)}), 500
 
@@ -81,11 +84,11 @@ def consultar_empleado(userId, empleado_id):
         print(f"Error al obtener empleado: {e}")
         return render_template('index.html', error="Error al obtener empleado")
     
-@app.route('/buscar/<int:userId>/<nombre>', methods=['GET'])
-def buscar(userId, nombre):
+@app.route('/buscar/<int:userId>/<buscar>', methods=['GET'])
+def buscar(userId, buscar):
     try:
         db = MssqlConnection()
-        empleado = db.listarEmpleados(userId, buscar=str(nombre))  # Busca el empleado por el ID
+        empleado = db.listarEmpleados(userId, buscar=str(buscar))  # Busca el empleado por el ID
 
         # Verificar si se obtuvo un resultado válido
         if empleado and len(empleado) > 0:

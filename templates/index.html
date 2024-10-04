@@ -37,7 +37,7 @@
                         const userId = result.userId;
                         window.location.href = `/`;
                     } else {
-                        alert('Credenciales incorrectas: ' + result.message);
+                        alert('Error: ' + result.message);
                     }
                 } catch (error) {
                     console.error('Error al cerrar sesión:', error);
@@ -47,18 +47,18 @@
         </script> 
         
         <label for="buscar">Buscar empleado:</label>
-        <input type="text" id="nombre" name="nombre" required>    
+        <input type="text" id="buscar" name="buscar" required>    
         <br></br>
         <button onclick="buscarEmpleado()">Buscar</button>
         <script>
             function buscarEmpleado() {
                 const userId = document.getElementById('userId').value;
-                const nombre = document.getElementById('nombre').value;
-                if (!validacionesBuscar(nombre)) {
+                const buscar = document.getElementById('buscar').value;
+                if (!validacionesBuscar(buscar)) {
                     console.log('Error datos de entrada incorrectos');
                     return;
                 }
-                window.location.href = `/buscar/${userId}/${nombre}`;
+                window.location.href = `/buscar/${userId}/${buscar}`;
             }
             function validacionesBuscar(buscar) {
                 const nombreInput = buscar;
@@ -84,6 +84,14 @@
                 window.location.href = `/insertar/${userId}`;
             }
         </script>        
+        <button onclick="listarMovimiento()">Listar Movimiento</button>
+        <script>
+            function listarMovimiento() {
+                const userId = document.getElementById('userId').value;
+                window.location.href = `/index/${userId}`;
+                //window.location.href = `/movimientos/${userId}`;
+            }
+        </script> 
         <br></br>
 
         <table class="employee-table">

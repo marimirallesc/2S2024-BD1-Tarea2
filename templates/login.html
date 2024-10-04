@@ -24,7 +24,9 @@
             async function login() {
                 try {
                     const username = document.getElementById('username').value;
+                    //console.log("username: ", username);
                     const password = document.getElementById('password').value;
+                    //console.log("password: ", password);
 
                     // Enviar los datos de login usando fetch
                     const response = await fetch('/login_empleado', {
@@ -40,6 +42,8 @@
                     // Si el login es exitoso, redirigir al index con el userId
                     if (result.success) {
                         const userId = result.userId;
+                        //console.log("userId: ", userId);
+                        //window.location.href = `/`;
                         window.location.href = `/index/${userId}`;
                     } else {
                         alert('Credenciales incorrectas: ' + result.message);
