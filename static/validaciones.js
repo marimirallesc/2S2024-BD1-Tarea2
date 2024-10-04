@@ -1,7 +1,7 @@
 
 function validaciones() {
     const nombreInput = document.getElementById('nombre');
-    const vdiInput = document.getElementById('vdi');
+    const identificacionInput = document.getElementById('identificacion');
 
     let valid = true;
 
@@ -11,9 +11,9 @@ function validaciones() {
         alert('El nombre solo puede contener caracteres alfabéticos, espacios o guiones.');
         valid = false;
     }
-    // Validar el vdi (valor monetario válido)
-    const vdiRegex = /^\d+(\.\d{1,2})?$/;
-    if (!vdiRegex.test(vdiInput.value)) {
+    // Validar el identificacion (valor monetario válido)
+    const identificacionRegex = /^\d+(\.\d{1,2})?$/;
+    if (!identificacionRegex.test(identificacionInput.value)) {
         alert('El documento de identidad debe ser un valor numérico válido.');
         valid = false;
     }

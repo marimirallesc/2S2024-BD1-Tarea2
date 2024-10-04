@@ -39,7 +39,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 });
 
-
 // Función para eliminar empleado
 function eliminarEmpleado(id, nombre, documento) {
     const confirmDelete = confirm(`¿Está seguro de eliminar el empleado ${nombre} con Documento de Identidad ${documento}?`);

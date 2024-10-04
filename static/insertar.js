@@ -14,17 +14,17 @@ document.addEventListener('DOMContentLoaded', () => {
             const user = document.getElementById('userId').value;
             const nombre = document.getElementById('nombre').value;
             const puesto = document.getElementById('puesto').value;
-            const vdi = document.getElementById('vdi').value;
+            const identificacion = document.getElementById('identificacion').value;
 
             // Imprimir los datos que se están enviando
-            //console.log('Datos enviados:', {user, vdi , nombre, puesto});
+            //console.log('Datos enviados:', {user, identificacion , nombre, puesto});
 
             const response = await fetch('/insertar_empleado', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({user, vdi , nombre, puesto})
+                body: JSON.stringify({user, identificacion , nombre, puesto})
             });
 
             const result = await response.json();

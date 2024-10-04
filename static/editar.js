@@ -5,11 +5,11 @@ document.addEventListener('DOMContentLoaded', () => {
         event.preventDefault(); // Previene el envío normal del formulario
 
         try {
-            /*const valid = validaciones();   // Realizar validaciones 
+            const valid = validaciones();   // Realizar validaciones 
             if (!valid) {   
                 console.log('Error datos de entrada incorrectos');
                 return;     // Si las validaciones fallan, detener la ejecucion
-            }*/
+            }
 
             const user = document.getElementById('userId').value;
             const empleadoId = document.getElementById('empleadoId').value;

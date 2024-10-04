@@ -9,20 +9,44 @@
 </head>
 <body>
     <div class="container">
+
+        <input type="hidden" id="userId" name="userId" value="{{ userId }}" required>
+
         <h1>Listado de Empleados</h1>
         <button onclick="window.location.href='/login'">Logout</button>
         <br></br>
 
-        <form id="buscarForm">
-            <label for="buscar">Buscar empleado:</label>
-            <input type="text" id="buscar" name="buscar" required>
+        <label for="buscar">Buscar empleado:</label>
+        <input type="text" id="nombre" name="nombre" required>    
+        <br></br>
+        <button onclick="buscarEmpleado()">Buscar</button>
+        <script>
+            function buscarEmpleado() {
+                const userId = document.getElementById('userId').value;
+                const nombre = document.getElementById('nombre').value;
+                if (!validacionesBuscar(nombre)) {
+                    console.log('Error datos de entrada incorrectos');
+                    return;
+                }
+                window.location.href = `/buscar/${userId}/${nombre}`;
+            }
+            function validacionesBuscar(buscar) {
+                const nombreInput = buscar;
 
-            <div class="buttons">
-                <button onclick="window.location.href='/'">Buscar</button>
-            </div>
-        </form>
+                let valid = true;
 
-        <input type="hidden" id="userId" name="userId" value="{{ userId }}" required>
+                // Validar el nombre (solo caracteres alfabéticos y espacios)
+                const nombreRegex = /^[A-Za-z\s-]+$/;
+                if (!nombreRegex.test(nombreInput.value)) {
+                    alert('El nombre solo puede contener caracteres alfabéticos, espacios o guiones.');
+                    valid = false;
+                }
+
+                return valid;
+            }
+        </script>       
+        <br></br>
+
         <button onclick="insertarEmpleado()">Insertar Empleado</button>
         <script>
             function insertarEmpleado() {

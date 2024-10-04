@@ -31,6 +31,37 @@ def listar_empleados(userId):
     except Exception as e:
         print(f"Error al listar empleados: {e}")
         return jsonify({'error': str(e)}), 500  # Devuelve un código de error adecuado
+    
+@app.route('/consultar/<int:userId>/<int:empleado_id>', methods=['GET'])
+def consultar_empleado(userId, empleado_id):
+    try:
+        db = MssqlConnection()
+        empleado = db.listarEmpleados(userId, buscar=str(empleado_id))  # Busca el empleado por el ID
+
+        # Verificar si se obtuvo un resultado válido
+        if empleado and len(empleado) > 0:
+            return render_template('consultar.html', empleado=empleado[0])
+        else:
+            return render_template('index.html', error="Empleado no encontrado")
+    except Exception as e:
+        print(f"Error al obtener empleado: {e}")
+        return render_template('index.html', error="Error al obtener empleado")
+    
+@app.route('/buscar/<int:userId>/<nombre>', methods=['GET'])
+def buscar(userId, nombre):
+    try:
+        db = MssqlConnection()
+        empleado = db.listarEmpleados(userId, buscar=str(nombre))  # Busca el empleado por el ID
+
+        # Verificar si se obtuvo un resultado válido
+        if empleado and len(empleado) > 0:
+            return render_template('consultar.html', empleado=empleado[0])
+        else:
+            return render_template('index.html', error="Empleado no encontrado")
+    except Exception as e:
+        print(f"Error al obtener empleado: {e}")
+        return render_template('index.html', error="Error al obtener empleado")
+
 
 @app.route('/insertar_empleado', methods=['POST'])
 def insertar_empleado():
@@ -52,22 +83,6 @@ def insertar_empleado():
             return jsonify({'success': False, 'message': 'Error al insertar el empleado'})
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)})
-    
-@app.route('/consultar/<int:userId>/<int:empleado_id>', methods=['GET'])
-def consultar_empleado(userId, empleado_id):
-    try:
-        db = MssqlConnection()
-        empleado = db.listarEmpleados(userId, buscar=str(empleado_id))  # Busca el empleado por el ID
-
-        # Verificar si se obtuvo un resultado válido
-        if empleado and len(empleado) > 0:
-            return render_template('consultar.html', empleado=empleado[0])
-        else:
-            return render_template('index.html', error="Empleado no encontrado")
-    except Exception as e:
-        print(f"Error al obtener empleado: {e}")
-        return render_template('index.html', error="Error al obtener empleado")
-
 
 @app.route('/editar/<int:userId>/<int:empleado_id>', methods=['GET'])
 def editar_empleado(userId, empleado_id):
