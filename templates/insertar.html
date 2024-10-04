@@ -30,7 +30,14 @@
             
             <div class="buttons">
                 <button type="submit">Insertar Empleado</button>
-                <button type="button" onclick="window.location.href='/';">Regresar</button>
+                <button onclick="index()">Regresar</button>
+                <script>
+                    function index() {
+                        const userId = document.getElementById('userId').value;
+                        window.location.href = `/index/${userId}`;
+                    }
+                </script>        
+                <br></br>
             </div>
         </form>
     </div>

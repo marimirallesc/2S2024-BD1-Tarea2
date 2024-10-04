@@ -46,13 +46,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (result.success) {
                 alert('Empleado actualizado exitosamente.');
-                window.location.href = '/'; // Redirigir a la lista de empleados
+                window.location.href = `/index/${user}`; // Redirigir a la lista de empleados
             } else {
                 alert('Error al actualizar el empleado: ' + result.message);
             }
         } catch (error) {
             console.error('Error capturado en el catch:', error);
-            alert('Hubo un error al actualizar el empleado.');
+            alert('El empleado no fue actualizado.');
         }
     });
 

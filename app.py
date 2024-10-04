@@ -5,16 +5,50 @@ app = Flask(__name__)
 
 app.secret_key = '0000'
 
-@app.route('/login/')
+@app.route('/')
 def login():
     return render_template('login.html')
 
-@app.route('/')
-def index():
-    userId = 1;
+@app.route('/login_empleado', methods=['POST'])
+def login_empleado():
+    data = request.get_json()
+    username = data.get('username')
+    password = data.get('password')
+    try:
+        db = MssqlConnection()
+        usuario = db.login(username, password)
+        
+        # Verificar si la consulta devolvió algún resultado
+        if usuario and len(usuario) > 0:
+            user = usuario[0]  # Accede a la primera fila del resultado (suponiendo que es una lista de filas)
+            userId = user[0]  # Aquí, 0 es el índice que representa el 'Id' del usuario en la fila
+            return jsonify({'success': True, 'userId': userId})
+        else:
+            return jsonify({'success': False, 'message': "Credenciales incorrectas"}), 401
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
+    
+@app.route('/logout_empleado', methods=['POST'])
+def logout_empleado():
+    data = request.get_json()
+    userId = data.get('userId')
+    try:
+        db = MssqlConnection()
+        usuario = db.logout(userId)
+        
+        # Verificar si la consulta devolvió algún resultado
+        if usuario and len(usuario) > 0:
+            return jsonify({'success': True, 'userId': userId})
+        else:
+            return jsonify({'success': False, 'message': "Credenciales incorrectas"}), 401
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+@app.route('/index/<int:userId>')
+def index(userId):
     return render_template('index.html', userId=userId) 
 
-@app.route('/insertar/<int:userId>')
+@app.route('/insertar/<int:userId>', methods=['GET'])
 def insertar(userId):
     db = MssqlConnection()
     puestos = db.listarPuestos()
@@ -40,7 +74,7 @@ def consultar_empleado(userId, empleado_id):
 
         # Verificar si se obtuvo un resultado válido
         if empleado and len(empleado) > 0:
-            return render_template('consultar.html', empleado=empleado[0])
+            return render_template('consultar.html', empleado=empleado[0], userId=userId)
         else:
             return render_template('index.html', error="Empleado no encontrado")
     except Exception as e:
@@ -55,7 +89,7 @@ def buscar(userId, nombre):
 
         # Verificar si se obtuvo un resultado válido
         if empleado and len(empleado) > 0:
-            return render_template('consultar.html', empleado=empleado[0])
+            return render_template('consultar.html', empleado=empleado[0], userId=userId)
         else:
             return render_template('index.html', error="Empleado no encontrado")
     except Exception as e:
@@ -92,18 +126,6 @@ def editar_empleado(userId, empleado_id):
         puestos = db.listarPuestos()
 
         if empleado and len(empleado) > 0:
-            puestos_lista = [
-                {'Id': 1, 'Nombre': 'Cajero'},
-                {'Id': 2, 'Nombre': 'Camarero'},
-                {'Id': 3, 'Nombre': 'Cuidador'},
-                {'Id': 4, 'Nombre': 'Conductor'},
-                {'Id': 5, 'Nombre': 'Asistente'},
-                {'Id': 6, 'Nombre': 'Recepcionista'},
-                {'Id': 7, 'Nombre': 'Fontanero'},
-                {'Id': 8, 'Nombre': 'Niñera'},
-                {'Id': 9, 'Nombre': 'Conserje'},
-                {'Id': 10, 'Nombre': 'Albañil'}
-            ]
             return render_template('editar.html', empleado=empleado[0], puestos=puestos, userId=userId)
         else:
             return render_template('index.html', error="Empleado no encontrado")

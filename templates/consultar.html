@@ -9,11 +9,19 @@
 <body>
     <div class="container">
         <h1>Detalles del Empleado</h1>
+        <input type="hidden" id="userId" name="userId" value="{{ userId }}" required>
         <p><strong>Documento de Identidad:</strong> {{ empleado.ValorDocumentoIdentidad }}</p>
         <p><strong>Nombre:</strong> {{ empleado.Nombre }}</p>
         <p><strong>Puesto:</strong> {{ empleado.Puesto }}</p>
         <p><strong>Saldo de Vacaciones:</strong> {{ empleado.SaldoVacaciones }}</p>
-        <button onclick="window.location.href='/';">Volver</button>
+        <button onclick="index()">Regresar</button>
+        <script>
+            function index() {
+                const userId = document.getElementById('userId').value;
+                window.location.href = `/index/${userId}`;
+            }
+        </script>        
+        <br></br>
     </div>
 </body>
 </html>

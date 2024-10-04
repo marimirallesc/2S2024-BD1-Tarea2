@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (result.success) {
                 alert('Empleado insertado exitosamente.');
-                window.location.href = '/'; // Redirigir a la lista de empleados
+                window.location.href = `/index/${user}`; // Redirigir a la lista de empleados
             } else {
                 alert('Error al insertar el empleado: ' + result.message);
             }

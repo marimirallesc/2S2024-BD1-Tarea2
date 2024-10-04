@@ -13,9 +13,39 @@
         <input type="hidden" id="userId" name="userId" value="{{ userId }}" required>
 
         <h1>Listado de Empleados</h1>
-        <button onclick="window.location.href='/login'">Logout</button>
-        <br></br>
+        <button onclick="logout()">Logout</button>
+        <br></br> 
+        
+        <script>
+            async function logout() {
+                try {
+                    const userId = document.getElementById('userId').value;
 
+                    // Enviar los datos de login usando fetch
+                    const response = await fetch('/logout_empleado', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ userId })
+                    });
+
+                    const result = await response.json();
+
+                    // Si el login es exitoso, redirigir al index con el userId
+                    if (result.success) {
+                        const userId = result.userId;
+                        window.location.href = `/`;
+                    } else {
+                        alert('Credenciales incorrectas: ' + result.message);
+                    }
+                } catch (error) {
+                    console.error('Error al cerrar sesión:', error);
+                    alert('Error al cerrar sesión. Intente de nuevo.');
+                }
+            }
+        </script> 
+        
         <label for="buscar">Buscar empleado:</label>
         <input type="text" id="nombre" name="nombre" required>    
         <br></br>

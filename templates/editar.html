@@ -30,7 +30,14 @@
             
             <div class="buttons">
                 <button type="submit">Guardar Cambios</button>
-                <button type="button" onclick="window.location.href='/';">Cancelar</button>
+                <button onclick="index()">Cancelar</button>
+                <script>
+                    function index() {
+                        const userId = document.getElementById('userId').value;
+                        window.location.href = `/index/${userId}`;
+                    }
+                </script>        
+                <br></br>
             </div>
         </form>
         
