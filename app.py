@@ -236,15 +236,15 @@ def insertar_movimiento():
 
         db = MssqlConnection()
         
-        if nuevoSaldo < 0:
-            return jsonify({'success': False, 'message': '<error Codigo="50011" Descripcion="Monto del movimiento rechazado pues si se aplicar el saldo seria negativo."/>'})
+        #if nuevoSaldo < 0:
+            #return jsonify({'success': False, 'message': '<error Codigo="50011" Descripcion="Monto del movimiento rechazado pues si se aplicar el saldo seria negativo."/>'})
 
         resultado = db.insertarMovimiento(userId, empleadoId, tipoMovimiento, montoOriginal)
 
         if resultado == 0:
             return jsonify({'success': True})
         else:
-            return jsonify({'success': False, 'message': 'Error al insertar el movimiento'})
+            return jsonify({'success': False,'error': 50011, 'message': 'Monto del movimiento rechazado pues si se aplica el saldo seria negativo.'})
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)})
 
