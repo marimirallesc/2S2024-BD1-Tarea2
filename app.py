@@ -9,6 +9,8 @@ app.secret_key = '0000'
 def login():
     return render_template('login.html')
 
+# Esta funcion deberia llamarse login_usuario
+# yo no lo cambie por si rompe lo demas
 @app.route('/login_empleado', methods=['POST'])
 def login_empleado():
     data = request.get_json()
@@ -17,17 +19,12 @@ def login_empleado():
     try:
         db = MssqlConnection()
         usuario = db.login(username, password)
-        
         # Verificar si la consulta devolvió algún resultado
-        if usuario and len(usuario) > 0:
-            user = usuario[0]  # Accede a la primera fila del resultado (suponiendo que es una lista de filas)
-            userId = user[1]  # Aquí, 0 es el índice que representa el 'Id' del usuario en la fila
-            #print('usuario', usuario)
-            #print('user', user)
-            #print('userId', userId)
+        if usuario[0][0] == 0:
+            userId = usuario[0][1]
             return jsonify({'success': True, 'userId': userId})
         else:
-            return jsonify({'success': False, 'message': "Credenciales incorrectas"}), 401
+            return jsonify({'success': False, 'message': db.descripcionError(usuario[0][0])}), 401
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)}), 500
     
@@ -38,12 +35,11 @@ def logout_empleado():
     try:
         db = MssqlConnection()
         usuario = db.logout(userId)
-        
         # Verificar si la consulta devolvió algún resultado
         if usuario == 0:
             return jsonify({'success': True, 'userId': userId})
         else:
-            return jsonify({'success': False, 'message': "Credenciales incorrectas."}), 401
+            return jsonify({'success': False, 'message': db.descripcionError(usuario)}), 401
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)}), 500
 
@@ -56,7 +52,7 @@ def listar_empleados(userId):
     try:
         db = MssqlConnection()
         empleados = db.listarEmpleados(userId)
-        if empleados == 50005:  # Error en la BD
+        if empleados == 50008:  # Error en la BD
             raise Exception("Lista de empleados no disponible")
         return jsonify(empleados)
     except Exception as e:
@@ -113,10 +109,8 @@ def insertar_empleado():
         
         if resultado == 0:
             return jsonify({'success': True})
-        elif resultado == 50006:
-            return jsonify({'success': False, 'message': 'El empleado ya existe'})
         else:
-            return jsonify({'success': False, 'message': 'Error al insertar el empleado'})
+            return jsonify({'success': False, 'message': db.descripcionError(resultado)}), 401
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)})
 
@@ -147,9 +141,13 @@ def actualizar_empleado():
 
         db = MssqlConnection()
         
-        db.editarEmpleado(userId, empleadoId, identificacion, nombre, puestoIndex)
-        
-        return {'success': True}  # Devuelve un objeto JSON en caso de éxito
+        resultado = db.editarEmpleado(userId, empleadoId, identificacion, nombre, puestoIndex)
+        if resultado == 0:
+            return jsonify({'success': True}) # Devuelve un objeto JSON en caso de éxito
+        else:
+            return jsonify({'success': False, 'message': db.descripcionError(resultado)}), 401
+            #return jsonify({db.descripcionError(resultado)}), 401
+
     except Exception as e:
         print(f"Error al actualizar empleado: {e}")
         return {'success': False, 'message': "Error al actualizar empleado"}, 500  # Devuelve un error
@@ -254,5 +252,5 @@ def insertar_movimiento():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    #app.run(debug=True)
     app.run(host='0.0.0.0')

@@ -46,7 +46,7 @@
                         //window.location.href = `/`;
                         window.location.href = `/index/${userId}`;
                     } else {
-                        alert('Credenciales incorrectas: ' + result.message);
+                        alert('Error: ' + result.message);
                     }
                 } catch (error) {
                     console.error('Error al iniciar sesión:', error);
