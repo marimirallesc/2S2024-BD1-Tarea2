@@ -11,22 +11,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;     // Si las validaciones fallan, detener la ejecucion
             }
 
+            const user = document.getElementById('userId').value;
             const nombre = document.getElementById('nombre').value;
-            const salario = document.getElementById('salario').value;
+            const puesto = document.getElementById('puesto').value;
+            const identificacion = document.getElementById('identificacion').value;
+
+            // Imprimir los datos que se están enviando
+            //console.log('Datos enviados:', {user, identificacion , nombre, puesto});
 
             const response = await fetch('/insertar_empleado', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ nombre, salario })
+                body: JSON.stringify({user, identificacion , nombre, puesto})
             });
 
             const result = await response.json();
 
             if (result.success) {
                 alert('Empleado insertado exitosamente.');
-                window.location.href = '/'; // Redirigir a la lista de empleados
+                window.location.href = `/index/${user}`; // Redirigir a la lista de empleados
             } else {
                 alert('Error al insertar el empleado: ' + result.message);
             }

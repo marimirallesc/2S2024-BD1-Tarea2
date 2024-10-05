@@ -9,21 +9,81 @@
 </head>
 <body>
     <div class="container">
-        <h1>Listado de Empleados</h1>
 
-        <button onclick="window.location.href='/login'">Logout</button>
+        <input type="hidden" id="userId" name="userId" value="{{ userId }}" required>
+
+        <h1>Listado de Empleados</h1>
+        <button onclick="logout()">Logout</button>
+        <br></br> 
+        
+        <script>
+            async function logout() {
+                try {
+                    const userId = document.getElementById('userId').value;
+
+                    // Enviar los datos de login usando fetch
+                    const response = await fetch('/logout_empleado', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ userId })
+                    });
+
+                    const result = await response.json();
+
+                    // Si el login es exitoso, redirigir al index con el userId
+                    if (result.success) {
+                        const userId = result.userId;
+                        window.location.href = `/`;
+                    } else {
+                        alert('Error: ' + result.message);
+                    }
+                } catch (error) {
+                    console.error('Error al cerrar sesión:', error);
+                    alert('Error al cerrar sesión. Intente de nuevo.');
+                }
+            }
+        </script> 
+        
+        <label for="buscar">Buscar empleado:</label>
+        <input type="text" id="buscar" name="buscar" required>    
+        <br></br>
+        <button onclick="buscarEmpleado()">Buscar</button>
+        <script>
+            function buscarEmpleado() {
+                const userId = document.getElementById('userId').value;
+                const buscar = document.getElementById('buscar').value;
+                if (!validacionesBuscar(buscar)) {
+                    console.log('Error datos de entrada incorrectos');
+                    return;
+                }
+                window.location.href = `/buscar/${userId}/${buscar}`;
+            }
+            function validacionesBuscar(buscar) {
+                const nombreInput = buscar;
+
+                let valid = true;
+
+                // Validar el nombre (solo caracteres alfabéticos y espacios)
+                const nombreRegex = /^[A-Za-z\s-]+$/;
+                if (!nombreRegex.test(nombreInput.value)) {
+                    alert('El nombre solo puede contener caracteres alfabéticos, espacios o guiones.');
+                    valid = false;
+                }
+
+                return valid;
+            }
+        </script>       
         <br></br>
 
-        <form id="buscarForm">
-            <label for="buscar">Buscar empleado:</label>
-            <input type="text" id="buscar" name="buscar" required>
-
-            <div class="buttons">
-                <button onclick="window.location.href='/'">Buscar</button>
-            </div>
-        </form>
-
-        <button onclick="window.location.href='/insertar'">Insertar Empleado</button>
+        <button onclick="insertarEmpleado()">Insertar Empleado</button>
+        <script>
+            function insertarEmpleado() {
+                const userId = document.getElementById('userId').value;
+                window.location.href = `/insertar/${userId}`;
+            }
+        </script>        
         <br></br>
 
         <table class="employee-table">
@@ -42,5 +102,9 @@
             </tbody>
         </table>
     </div>
+     <!-- Si existe un error, lo pasamos como un input oculto -->
+    {% if error %}
+    <input type="hidden" id="errorMessage" value="{{ error }}">
+    {% endif %}
 </body>
 </html>

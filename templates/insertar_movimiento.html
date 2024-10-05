@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insertar Movimiento</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="{{ url_for('static', filename='validaciones.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='insertar_movimiento.js') }}" defer></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Insertar Movimiento</h1>
+        <form id="insertMovimientoForm">
+            <input type="hidden" id="userId" name="userId" value="{{ userId }}" required>
+            <input type="hidden" id="empleadoId" name="empleadoId" value="{{ empleado.Id }}" required>
+
+            <label for="vdi">Documento de Identidad:</label>
+            <input type="text" id="vdi" name="vdi" value="{{ empleado.ValorDocumentoIdentidad }}" readonly required>
+
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" value="{{ empleado.Nombre }}" readonly required>
+
+            <label for="saldo">Saldo Vacaciones:</label>
+            <input type="text" id="saldo" name="saldo" value="{{ empleado.SaldoVacaciones }}" readonly required>
+
+            <label for="tipoMovimiento">Tipo de Movimiento:</label>
+            <input type="hidden" id="tipos" name="tipos" value="{{ tipoMovimiento }}" required>
+            <select id="tipoMovimiento" name="tipoMovimiento" required>
+                {% for tipo in tipoMovimiento %}
+                <option value="{{ tipo.Id }}">{{ tipo.Nombre }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="monto">Monto:</label>
+            <input type="number" id="monto" name="monto" required>
+
+            <div class="buttons">
+                <button type="submit">Insertar Movimiento</button>
+                <button onclick="index()">Regresar</button>
+                <script>
+                    function index() {
+                        const userId = document.getElementById('userId').value;
+                        const vdi = document.getElementById('vdi').value;
+                        window.location.href = `/movimientos/${userId}/${vdi}`;
+                    }
+                </script>        
+                <br></br>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

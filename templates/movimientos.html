@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listado de Movimientos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="{{ url_for('static', filename='movimientos.js') }}" defer></script>
+</head>
+<body>
+    <div class="container">
+
+        <input type="hidden" id="userId" name="userId" value="{{ userId }}" required>
+        <input type="hidden" id="empleadoId" name="empleadoId" value="{{ empleado_id }}" required>
+        <input type="hidden" id="empleadoVDI" name="empleadoVDI" value="{{ empleado_vdi }}" required>
+
+        <h1>Movimientos de Empleado</h1>
+
+        <button onclick="index()">Regresar</button>
+        <script>
+            function index() {
+                const userId = document.getElementById('userId').value;
+                window.location.href = `/index/${userId}`;
+            }
+        </script>        
+        <br></br>
+
+        <h2>Detalles del Empleado</h2>
+        <p><strong>Documento de Identidad:</strong> {{ empleado.ValorDocumentoIdentidad }}</p>
+        <p><strong>Nombre:</strong> {{ empleado.Nombre }}</p>
+        <p><strong>Saldo de Vacaciones:</strong> {{ empleado.SaldoVacaciones }}</p>
+
+        <button onclick="insertarMovimiento()">Insertar Movimiento</button>
+        <script>
+            function insertarMovimiento() {
+                const userId = document.getElementById('userId').value;
+                const empleadoVDI = document.getElementById('empleadoVDI').value;
+                window.location.href = `/insert_movimiento/${userId}/${empleadoVDI}`;
+            }
+        </script>    
+        <br></br>   
+
+        <h2>Listado de Movimientos</h2>
+        <table class="movimientos-table">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Tipo Movimiento</th>
+                    <th>Monto</th>
+                    <th>Nuevo Saldo</th>
+                    <th>Registrado por</th>
+                    <th>IP</th>
+                    <th>Estampa de Tiempo</th>
+                </tr>
+            </thead>
+            <tbody id="movimientosTableBody">
+                <!-- Filas generadas dinámicamente -->
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

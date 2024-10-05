@@ -1,7 +1,7 @@
 
 function validaciones() {
     const nombreInput = document.getElementById('nombre');
-    const salarioInput = document.getElementById('salario');
+    const identificacionInput = document.getElementById('identificacion');
 
     let valid = true;
 
@@ -11,10 +11,10 @@ function validaciones() {
         alert('El nombre solo puede contener caracteres alfabéticos, espacios o guiones.');
         valid = false;
     }
-    // Validar el salario (valor monetario válido)
-    const salarioRegex = /^\d+(\.\d{1,2})?$/;
-    if (!salarioRegex.test(salarioInput.value)) {
-        alert('El salario debe ser un valor numérico válido.');
+    // Validar el identificacion (valor monetario válido)
+    const identificacionRegex = /^\d+(\.\d{1,2})?$/;
+    if (!identificacionRegex.test(identificacionInput.value)) {
+        alert('El documento de identidad debe ser un valor numérico válido.');
         valid = false;
     }
     return valid;
