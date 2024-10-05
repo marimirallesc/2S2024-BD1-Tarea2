@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 // Si no hay movimientos, mostrar un mensaje
                 alert('No hay movimientos.');
-                window.location.href = `/index/${userId}`; // Redirigir a la lista de empleados
+                //window.location.href = `/index/${userId}`; // Redirigir a la lista de empleados
             }
         })
         .catch(error => {
