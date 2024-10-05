@@ -27,6 +27,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         <br></br>            
                         <button onclick="window.location.href='/editar/${userId}/${empleado.ValorDocumentoIdentidad}'">Editar</button>
                         <button onclick="eliminarEmpleado(${empleado.Id}, '${empleado.Nombre}', '${empleado.ValorDocumentoIdentidad}')">Eliminar</button>
+                        <br></br> 
+                        <button onclick="window.location.href = '/movimientos/${userId}/${empleado.ValorDocumentoIdentidad}'">Listar Movimiento</button>
                     </td>
                 `;
 

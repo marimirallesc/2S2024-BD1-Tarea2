@@ -69,11 +69,11 @@ def listar_empleados(userId):
         print(f"Error al listar empleados: {e}")
         return jsonify({'error': str(e)}), 500  # Devuelve un código de error adecuado
     
-@app.route('/consultar/<int:userId>/<int:empleado_id>', methods=['GET'])
-def consultar_empleado(userId, empleado_id):
+@app.route('/consultar/<int:userId>/<int:empleado_vdi>', methods=['GET'])
+def consultar_empleado(userId, empleado_vdi):
     try:
         db = MssqlConnection()
-        empleado = db.listarEmpleados(userId, buscar=str(empleado_id))  # Busca el empleado por el ID
+        empleado = db.listarEmpleados(userId, buscar=str(empleado_vdi))  # Busca el empleado por el VDI
 
         # Verificar si se obtuvo un resultado válido
         if empleado and len(empleado) > 0:
@@ -173,6 +173,46 @@ def eliminar_empleado(empleado_id):
     except Exception as e:
         print(f"Error al eliminar empleado: {e}")
         return jsonify({'message': 'Error en el servidor.'}), 500
+
+@app.route('/movimientos/<int:userId>/<int:empleado_vdi>')
+def movimientos(userId, empleado_vdi):
+    try:
+        db = MssqlConnection()
+        empleado = db.listarEmpleados(userId, buscar=str(empleado_vdi))  # Busca el empleado por el VDI
+
+        # Verificar si se obtuvo un resultado válido
+        if empleado and len(empleado) > 0:
+            empleado_id = empleado[0]['Id']
+            return render_template('movimientos.html', userId=userId, empleado_vdi=empleado_vdi, empleado=empleado[0], empleado_id=empleado_id) 
+        else:
+            return render_template('index.html', error="Empleado no encontrado")
+    except Exception as e:
+        print(f"Error al obtener empleado: {e}")
+        return render_template('index.html', error="Error al obtener empleado")
+    
+
+@app.route('/listar_movimientos/<int:userId>/<int:empleado_id>', methods=['GET'])
+def listar_movimientos(userId, empleado_id):
+    try:
+        db = MssqlConnection()
+        userId = userId
+        movimientos = db.listarMovimientos(empleado_id)
+        
+        # Si se encontraron movimientos, los retornamos
+        if movimientos and len(movimientos) > 0:
+            return jsonify({'success': True, 'movimientos': movimientos})
+        else:
+            # Si no hay movimientos, retornar success: false y un arreglo vacío
+            return jsonify({'success': False, 'movimientos': []}), 200
+    except Exception as e:
+        print(f"Error al listar movimientos: {e}")
+        return jsonify({'error': str(e)}), 500  # Devuelve un código de error adecuado
+
+    
+
+@app.route('/insertar_movimiento/<int:userId>', methods=['GET'])
+def insertar_movimiento(userId):
+    return render_template('insertar_movimiento.html', userId=userId)
 
 if __name__ == '__main__':
     app.run(debug=True)
