@@ -34,13 +34,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify({ user, empleadoId, nombre, puesto, identificacion })
             });
 
-
-            if (!response.ok) {
-                const errorText = await response.text(); // Ver el texto de la respuesta del servidor en caso de error
-                console.error('Error en la respuesta del servidor:', errorText);
-                alert('Error al actualizar el empleado: ' + errorText);
-                return;
-            }
+            // Borrar??? -> Muestra el mensaje de error mal
+            //if (!response.ok) {
+            //    const errorText = await response.text(); // Ver el texto de la respuesta del servidor en caso de error
+            //    console.error('Error en la respuesta del servidor:', errorText);
+            //    alert('Error al actualizar el empleado: ' + errorText);
+            //    return;
+            //}
 
             const result = await response.json();
 
