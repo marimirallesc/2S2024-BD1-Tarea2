@@ -34,7 +34,8 @@
         <script>
             function insertarMovimiento() {
                 const userId = document.getElementById('userId').value;
-                //window.location.href = `/insertar_movimiento/${userId}`;
+                const empleadoVDI = document.getElementById('empleadoVDI').value;
+                window.location.href = `/insert_movimiento/${userId}/${empleadoVDI}`;
             }
         </script>    
         <br></br>   

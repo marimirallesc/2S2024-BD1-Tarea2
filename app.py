@@ -51,12 +51,6 @@ def logout_empleado():
 def index(userId):
     return render_template('index.html', userId=userId) 
 
-@app.route('/insertar/<int:userId>', methods=['GET'])
-def insertar(userId):
-    db = MssqlConnection()
-    puestos = db.listarPuestos()
-    return render_template('insertar.html', userId=userId, puestos=puestos)
-
 @app.route('/listar_empleados/<int:userId>', methods=['GET'])
 def listar_empleados(userId):
     try:
@@ -99,6 +93,11 @@ def buscar(userId, buscar):
         print(f"Error al obtener empleado: {e}")
         return render_template('index.html', error="Error al obtener empleado")
 
+@app.route('/insertar/<int:userId>', methods=['GET'])
+def insertar(userId):
+    db = MssqlConnection()
+    puestos = db.listarPuestos()
+    return render_template('insertar.html', userId=userId, puestos=puestos)
 
 @app.route('/insertar_empleado', methods=['POST'])
 def insertar_empleado():
@@ -208,11 +207,51 @@ def listar_movimientos(userId, empleado_id):
         print(f"Error al listar movimientos: {e}")
         return jsonify({'error': str(e)}), 500  # Devuelve un código de error adecuado
 
-    
+@app.route('/insert_movimiento/<int:userId>/<int:empleado_vdi>', methods=['GET'])
+def insert_movimiento(userId, empleado_vdi):
+    try:
+        db = MssqlConnection()
+        tipoMovimiento = db.listarTipoMovimientos()
+        empleado = db.listarEmpleados(userId, buscar=str(empleado_vdi))  # Busca el empleado por el VDI
 
-@app.route('/insertar_movimiento/<int:userId>', methods=['GET'])
-def insertar_movimiento(userId):
-    return render_template('insertar_movimiento.html', userId=userId)
+        # Verificar si se obtuvo un resultado válido
+        if empleado and len(empleado) > 0:
+            empleado_id = empleado[0]['Id']
+            return render_template('insertar_movimiento.html', userId=userId, empleado=empleado[0], empleado_id=empleado_id, empleado_vdi=empleado_vdi, tipoMovimiento=tipoMovimiento)
+        else:
+            return render_template('index.html', error="Empleado no encontrado")
+    except Exception as e:
+        print(f"Error al obtener empleado: {e}")
+        return render_template('index.html', error="Error al obtener empleado")
+
+@app.route('/insertar_movimiento', methods=['POST'])
+def insertar_movimiento():
+    try:
+        data = request.json
+        userId = data.get('userId')
+        empleadoId = data.get('empleadoId')
+        vdi = data.get('vdi')
+        tipoMovimiento = data.get('tipoMovimiento')
+        monto = data.get('monto')
+        montoOriginal = data.get('montoOriginal')
+        nuevoSaldo = data.get('nuevoSaldo')
+
+        db = MssqlConnection()
+        
+        if nuevoSaldo < 0:
+            return jsonify({'success': False, 'message': '<error Codigo="50011" Descripcion="Monto del movimiento rechazado pues si se aplicar el saldo seria negativo."/>'})
+
+        resultado = db.insertarMovimiento(userId, empleadoId, tipoMovimiento, montoOriginal)
+
+        if resultado == 0:
+            return jsonify({'success': True})
+        else:
+            return jsonify({'success': False, 'message': 'Error al insertar el movimiento'})
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)})
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

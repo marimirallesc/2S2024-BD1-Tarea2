@@ -10,10 +10,22 @@
     <div class="container">
         <h1>Detalles del Empleado</h1>
         <input type="hidden" id="userId" name="userId" value="{{ userId }}" required>
+        <input type="hidden" id="vdi" name="vdi" value="{{ empleado.ValorDocumentoIdentidad }}" required>
         <p><strong>Documento de Identidad:</strong> {{ empleado.ValorDocumentoIdentidad }}</p>
         <p><strong>Nombre:</strong> {{ empleado.Nombre }}</p>
         <p><strong>Puesto:</strong> {{ empleado.Puesto }}</p>
         <p><strong>Saldo de Vacaciones:</strong> {{ empleado.SaldoVacaciones }}</p>
+
+        <button onclick="listarMovimiento()">Listar Movimiento</button>
+        <script>
+            function listarMovimiento() {
+                const userId = document.getElementById('userId').value;
+                const empleado_vdi = document.getElementById('vdi').value;
+                window.location.href = `/movimientos/${userId}/${empleado_vdi}`;
+            }
+        </script> 
+        <br></br> 
+        
         <button onclick="index()">Regresar</button>
         <script>
             function index() {
