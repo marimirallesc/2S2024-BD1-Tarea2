@@ -38,7 +38,7 @@
                     });
 
                     const result = await response.json();
-
+                    
                     // Si el login es exitoso, redirigir al index con el userId
                     if (result.success) {
                         const userId = result.userId;
@@ -46,7 +46,8 @@
                         //window.location.href = `/`;
                         window.location.href = `/index/${userId}`;
                     } else {
-                        alert('Credenciales incorrectas: ' + result.message);
+                        console.error(result.error + ': ' + result.message);
+                        alert(result.error + ': ' + result.message);
                     }
                 } catch (error) {
                     console.error('Error al iniciar sesión:', error);

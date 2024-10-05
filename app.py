@@ -11,23 +11,22 @@ def login():
 
 @app.route('/login_empleado', methods=['POST'])
 def login_empleado():
-    data = request.get_json()
-    username = data.get('username')
-    password = data.get('password')
     try:
+        data = request.get_json()
+        username = data.get('username')
+        password = data.get('password')
         db = MssqlConnection()
         usuario = db.login(username, password)
+        user = usuario[0]  # Accede a la primera fila del resultado (suponiendo que es una lista de filas)
+        resultado = user[0]
         
         # Verificar si la consulta devolvió algún resultado
-        if usuario and len(usuario) > 0:
-            user = usuario[0]  # Accede a la primera fila del resultado (suponiendo que es una lista de filas)
-            userId = user[1]  # Aquí, 0 es el índice que representa el 'Id' del usuario en la fila
-            #print('usuario', usuario)
-            #print('user', user)
-            #print('userId', userId)
+        if resultado == 0:#usuario and len(usuario) > 0:
+            userId = user[1]  # Aquí, 1 es el índice que representa el 'Id' del usuario en la fila
             return jsonify({'success': True, 'userId': userId})
-        else:
-            return jsonify({'success': False, 'message': "Credenciales incorrectas"}), 401
+        else :
+            mensaje = db.descripcionError(resultado)
+            return jsonify({'success': False,'error': resultado, 'message': mensaje})
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)}), 500
     
