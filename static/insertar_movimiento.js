@@ -69,10 +69,10 @@ document.addEventListener('DOMContentLoaded', () => {
         nuevoSaldo = saldoVacaciones + monto; // Asumiendo que los movimientos positivos aumentan el saldo
         //console.log('nuevoSaldo: ', nuevoSaldo);
 
-        if (nuevoSaldo < 0) {
+        /*if (nuevoSaldo < 0) {
             alert('Error: Monto del movimiento rechazado, el saldo sería negativo.');
             return;
-        }
+        }*/
 
         try {
             const response = await fetch('/insertar_movimiento', {
@@ -89,7 +89,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert('Movimiento insertado exitosamente.');
                 window.location.href = `/movimientos/${userId}/${vdi}`; // Redirigir a la lista de movimientos
             } else {
-                alert('Error al insertar el movimiento: ' + result.message);
+                console.error(result.error + ': ' + result.message);
+                alert(result.error + ': ' + result.message);
             }
         } catch (error) {
             console.error('Error al insertar movimiento:', error);
