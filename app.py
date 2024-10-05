@@ -110,13 +110,13 @@ def insertar_empleado():
         
         db = MssqlConnection()
         resultado = db.insertarEmpleado(user, vdi, nombre, puesto)
+        print(resultado)
         
         if resultado == 0:
             return jsonify({'success': True})
-        elif resultado == 50006:
-            return jsonify({'success': False, 'message': 'El empleado ya existe'})
         else:
-            return jsonify({'success': False, 'message': 'Error al insertar el empleado'})
+            mensaje = db.descripcionError(resultado)
+            return jsonify({'success': False,'error': resultado, 'message': mensaje})
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)})
 
