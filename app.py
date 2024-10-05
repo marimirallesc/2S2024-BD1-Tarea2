@@ -146,7 +146,6 @@ def actualizar_empleado():
             return jsonify({'success': True}) # Devuelve un objeto JSON en caso de éxito
         else:
             return jsonify({'success': False, 'message': db.descripcionError(resultado)}), 401
-            #return jsonify({db.descripcionError(resultado)}), 401
 
     except Exception as e:
         print(f"Error al actualizar empleado: {e}")
@@ -166,7 +165,7 @@ def eliminar_empleado(empleado_id):
         if resultado == 0:
             return jsonify({'message': 'Empleado eliminado exitosamente.'})
         else:
-            return jsonify({'message': 'Error al eliminar el empleado.'}), 400
+            return jsonify({'success': False, 'message': db.descripcionError(resultado)}), 401
     except Exception as e:
         print(f"Error al eliminar empleado: {e}")
         return jsonify({'message': 'Error en el servidor.'}), 500
@@ -235,16 +234,13 @@ def insertar_movimiento():
         nuevoSaldo = data.get('nuevoSaldo')
 
         db = MssqlConnection()
-        
-        #if nuevoSaldo < 0:
-            #return jsonify({'success': False, 'message': '<error Codigo="50011" Descripcion="Monto del movimiento rechazado pues si se aplicar el saldo seria negativo."/>'})
 
         resultado = db.insertarMovimiento(userId, empleadoId, tipoMovimiento, montoOriginal)
 
         if resultado == 0:
             return jsonify({'success': True})
         else:
-            return jsonify({'success': False,'error': 50011, 'message': 'Monto del movimiento rechazado pues si se aplica el saldo seria negativo.'})
+            return jsonify({'success': False, 'message': db.descripcionError(resultado)}), 401
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)})
 

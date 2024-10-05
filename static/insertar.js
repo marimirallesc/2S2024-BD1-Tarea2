@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const identificacion = document.getElementById('identificacion').value;
 
             // Imprimir los datos que se están enviando
-            //console.log('Datos enviados:', {user, identificacion , nombre, puesto});
+            console.log('Datos enviados:', {user, identificacion , nombre, puesto});
 
             const response = await fetch('/insertar_empleado', {
                 method: 'POST',
