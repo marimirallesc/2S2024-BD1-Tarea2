@@ -1,7 +1,7 @@
 
 function validaciones() {
     const nombreInput = document.getElementById('nombre');
-    const identificacionInput = document.getElementById('identificacion');
+    const identificacionInput = document.getElementById('vdi');
 
     let valid = true;
 
@@ -12,7 +12,7 @@ function validaciones() {
         valid = false;
     }
     // Validar el identificacion (valor monetario válido)
-    const identificacionRegex = /^\d+(\.\d{1,2})?$/;
+    const identificacionRegex = /^\d+$/;
     if (!identificacionRegex.test(identificacionInput.value)) {
         alert('El documento de identidad debe ser un valor numérico válido.');
         valid = false;
