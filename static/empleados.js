@@ -20,16 +20,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 row.innerHTML = `
                     <td>${empleado.ValorDocumentoIdentidad}</td>
                     <td>${empleado.Nombre}</td>
-                    <td>${empleado.Puesto}</td>
-                    <td>${empleado.FechaContratacion}</td>
-                    <td>${empleado.SaldoVacaciones}</td>
                     <td>
-                        <button onclick="window.location.href='/consultar/${userId}/${empleado.ValorDocumentoIdentidad}'">Consultar</button>
-                        <br></br>            
+                        <button onclick="window.location.href='/consultar/${userId}/${empleado.ValorDocumentoIdentidad}'">Consultar</button>           
                         <button onclick="window.location.href='/editar/${userId}/${empleado.ValorDocumentoIdentidad}'">Editar</button>
                         <button onclick="eliminarEmpleado(${userId}, ${empleado.Id}, '${empleado.Nombre}', '${empleado.ValorDocumentoIdentidad}')">Eliminar</button>
-                        <br></br> 
-                        <button onclick="window.location.href = '/movimientos/${userId}/${empleado.ValorDocumentoIdentidad}'">Listar Movimiento</button>
                     </td>
                 `;
 
