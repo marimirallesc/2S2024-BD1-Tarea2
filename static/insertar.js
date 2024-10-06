@@ -11,11 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const puesto = document.getElementById('puesto').value;
             const identificacion = document.getElementById('vdi').value;
 
-            const valid = validaciones();   // Realizar validaciones 
-            if (!valid) {   
-                console.log('Error datos de entrada incorrectos');
-                return;     // Si las validaciones fallan, detener la ejecucion
-            }
 
             // Imprimir los datos que se están enviando
             console.log('Datos enviados:', {user, identificacion , nombre, puesto});
@@ -35,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.location.href = `/index/${user}`; // Redirigir a la lista de empleados
             } else {
                 console.error(result.error + ': ' + result.message);
-                alert(result.error + ': ' + result.message);
+                alert('Error: ' + result.message);
             }
         } catch (error) {
             console.error('Error al insertar empleado: ', error);

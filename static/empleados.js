@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <button onclick="window.location.href='/consultar/${userId}/${empleado.ValorDocumentoIdentidad}'">Consultar</button>
                         <br></br>            
                         <button onclick="window.location.href='/editar/${userId}/${empleado.ValorDocumentoIdentidad}'">Editar</button>
-                        <button onclick="eliminarEmpleado(${empleado.Id}, '${empleado.Nombre}', '${empleado.ValorDocumentoIdentidad}')">Eliminar</button>
+                        <button onclick="eliminarEmpleado(${userId}, ${empleado.Id}, '${empleado.Nombre}', '${empleado.ValorDocumentoIdentidad}')">Eliminar</button>
                         <br></br> 
                         <button onclick="window.location.href = '/movimientos/${userId}/${empleado.ValorDocumentoIdentidad}'">Listar Movimiento</button>
                     </td>
@@ -43,26 +43,36 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Función para eliminar empleado
-function eliminarEmpleado(id, nombre, documento) {
+function eliminarEmpleado(userId, empleado_id, nombre, documento) {
+    console.error(userId, empleado_id, nombre, documento);
     const confirmDelete = confirm(`¿Está seguro de eliminar el empleado ${nombre} con Documento de Identidad ${documento}?`);
     if (confirmDelete) {
-        fetch(`/eliminar/${id}`, {
+        fetch(`/eliminar/${userId}/${empleado_id}`, {
             method: 'POST'
         })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(data => { throw new Error(data.message); });
-            }
-            return response.json();
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(data => { throw new Error(data.message); });
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert(data.message);
+                location.reload();  // Recargar la página para actualizar la lista
+            })
+            .catch(error => {
+                alert('Error al eliminar el empleado: ' + error.message);
+                console.error('Error al eliminar el empleado:', error);
+            });
+    }
+    else {
+        fetch(`/intento_eliminar/${userId}/${empleado_id}`, {
+            method: 'POST'
         })
-        .then(data => {
-            alert(data.message);
-            location.reload();  // Recargar la página para actualizar la lista
-        })
-        .catch(error => {
-            alert('Error al eliminar el empleado: ' + error.message);
-            console.error('Error al eliminar el empleado:', error);
-        });
+            .catch(error => {
+                alert('Error al eliminar el empleado: ' + error.message);
+                console.error('Error al eliminar el empleado:', error);
+            });
     }
 }
 
