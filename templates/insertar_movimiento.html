@@ -11,18 +11,18 @@
 <body>
     <div class="container">
         <h1>Insertar Movimiento</h1>
+
         <form id="insertMovimientoForm">
             <input type="hidden" id="userId" name="userId" value="{{ userId }}" required>
             <input type="hidden" id="empleadoId" name="empleadoId" value="{{ empleado.Id }}" required>
 
-            <label for="vdi">Documento de Identidad:</label>
-            <input type="text" id="vdi" name="vdi" value="{{ empleado.ValorDocumentoIdentidad }}" readonly required>
+            <input type="hidden" id="vdi" name="vdi" value="{{ empleado.ValorDocumentoIdentidad }}" readonly required>
+            <input type="hidden" id="nombre" name="nombre" value="{{ empleado.Nombre }}" readonly required>
+            <input type="hidden" id="saldo" name="saldo" value="{{ empleado.SaldoVacaciones }}" readonly required>
 
-            <label for="nombre">Nombre:</label>
-            <input type="text" id="nombre" name="nombre" value="{{ empleado.Nombre }}" readonly required>
-
-            <label for="saldo">Saldo Vacaciones:</label>
-            <input type="text" id="saldo" name="saldo" value="{{ empleado.SaldoVacaciones }}" readonly required>
+            <p><strong>Documento de Identidad:</strong> {{ empleado.ValorDocumentoIdentidad }}</p>
+            <p><strong>Nombre:</strong> {{ empleado.Nombre }}</p>
+            <p><strong>Saldo de Vacaciones:</strong> {{ empleado.SaldoVacaciones }}</p>
 
             <label for="tipoMovimiento">Tipo de Movimiento:</label>
             <input type="hidden" id="tipos" name="tipos" value="{{ tipoMovimiento }}" required>
@@ -37,17 +37,18 @@
 
             <div class="buttons">
                 <button type="submit">Insertar Movimiento</button>
-                <button onclick="index()">Regresar</button>
+                <button type="button" onclick="regresar()">Regresar</button>
                 <script>
-                    function index() {
+                    function regresar() {
                         const userId = document.getElementById('userId').value;
                         const vdi = document.getElementById('vdi').value;
                         window.location.href = `/movimientos/${userId}/${vdi}`;
                     }
-                </script>        
-                <br></br>
+                </script>  
+                <br><br>
             </div>
         </form>
     </div>
+
 </body>
 </html>

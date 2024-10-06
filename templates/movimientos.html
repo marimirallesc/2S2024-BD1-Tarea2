@@ -16,11 +16,12 @@
 
         <h1>Movimientos de Empleado</h1>
 
-        <button onclick="index()">Regresar</button>
+        <button onclick="regresar()">Regresar</button>
         <script>
-            function index() {
+            function regresar() {
                 const userId = document.getElementById('userId').value;
-                window.location.href = `/index/${userId}`;
+                const empleadoVDI = document.getElementById('empleadoVDI').value;
+                window.location.href = `/consultar/${userId}/${empleadoVDI}`;
             }
         </script>        
         <br></br>
@@ -35,7 +36,7 @@
             function insertarMovimiento() {
                 const userId = document.getElementById('userId').value;
                 const empleadoVDI = document.getElementById('empleadoVDI').value;
-                window.location.href = `/insert_movimiento/${userId}/${empleadoVDI}`;
+                window.location.href = `/insertar_movimiento/${userId}/${empleadoVDI}`;
             }
         </script>    
         <br></br>   

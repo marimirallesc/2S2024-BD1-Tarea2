@@ -221,8 +221,8 @@ def listar_movimientos(userId, empleado_id):
         print(f"Error al listar movimientos: {e}")
         return jsonify({'error': str(e)}), 500  # Devuelve un código de error adecuado
 
-@app.route('/insert_movimiento/<int:userId>/<int:empleado_vdi>', methods=['GET'])
-def insert_movimiento(userId, empleado_vdi):
+@app.route('/insertar_movimiento/<int:userId>/<int:empleado_vdi>', methods=['GET'])
+def insertar_movimiento(userId, empleado_vdi):
     try:
         db = MssqlConnection()
         tipoMovimiento = db.listarTipoMovimientos()
@@ -238,8 +238,8 @@ def insert_movimiento(userId, empleado_vdi):
         print(f"Error al obtener empleado: {e}")
         return render_template('index.html', error="Error al obtener empleado")
 
-@app.route('/insertar_movimiento', methods=['POST'])
-def insertar_movimiento():
+@app.route('/insert_movimiento', methods=['POST'])
+def insert_movimiento():
     try:
         data = request.json
         userId = data.get('userId')

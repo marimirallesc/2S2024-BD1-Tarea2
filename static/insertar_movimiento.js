@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const monto = parseFloat(document.getElementById('monto').value);
 
         try {
-            const response = await fetch('/insertar_movimiento', {
+            const response = await fetch('/insert_movimiento', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
