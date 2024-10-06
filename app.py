@@ -43,15 +43,18 @@ def logout_empleado():
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)}), 500
 
-@app.route('/index/<int:userId>')
-def index(userId):
-    return render_template('index.html', userId=userId) 
+@app.route('/index/<int:userId>/<buscar>')
+@app.route('/index/<int:userId>/', defaults={'buscar': ''})
+def index(userId, buscar):
+    return render_template('index.html', userId=userId, buscar=buscar) 
 
-@app.route('/listar_empleados/<int:userId>', methods=['GET'])
-def listar_empleados(userId):
+#@app.route('/listar_empleados/<int:userId>/<buscar>', methods=['GET'])
+@app.route('/listar_empleados/<int:userId>/<buscar>', methods=['GET'])
+@app.route('/listar_empleados/<int:userId>/', defaults={'buscar': ''}, methods=['GET'])
+def listar_empleados(userId, buscar):
     try:
         db = MssqlConnection()
-        empleados = db.listarEmpleados(userId)
+        empleados = db.listarEmpleados(userId, buscar=str(buscar))
         if empleados == 50008:  # Error en la BD
             raise Exception("Lista de empleados no disponible")
         return jsonify(empleados)
