@@ -6,8 +6,9 @@ document.addEventListener('DOMContentLoaded', function() {
         window.location.href = '/';  // Redirige al index.html
     }
     const userId = document.getElementById('userId').value;
+    const buscar = document.getElementById('buscar').value;
     console.log(`Fetching empleados for userId: ${userId}`);
-    fetch(`/listar_empleados/${userId}`)
+    fetch(`/listar_empleados/${userId}/${buscar}`)
         .then(response => response.json())
         .then(empleados => {
             const tbody = document.getElementById('employeeTableBody');

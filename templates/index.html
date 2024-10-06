@@ -47,33 +47,17 @@
         </script> 
         
         <label for="buscar">Buscar empleado:</label>
-        <input type="text" id="buscar" name="buscar" required>    
+        <input type="text" id="buscar" name="buscar" value="{{ buscar }}" required>    
         <br></br>
         <button onclick="buscarEmpleado()">Buscar</button>
         <script>
             function buscarEmpleado() {
                 const userId = document.getElementById('userId').value;
                 const buscar = document.getElementById('buscar').value;
-                if (!validacionesBuscar(buscar)) {
-                    console.log('Error datos de entrada incorrectos');
-                    return;
-                }
-                window.location.href = `/buscar/${userId}/${buscar}`;
+
+                window.location.href = `/index/${userId}/${buscar}`;
             }
-            function validacionesBuscar(buscar) {
-                const nombreInput = buscar;
 
-                let valid = true;
-
-                // Validar el nombre (solo caracteres alfabéticos y espacios)
-                const nombreRegex = /^[A-Za-z\s-]+$/;
-                if (!nombreRegex.test(nombreInput.value)) {
-                    alert('El nombre solo puede contener caracteres alfabéticos, espacios o guiones.');
-                    valid = false;
-                }
-
-                return valid;
-            }
         </script>       
         <br></br>
 
