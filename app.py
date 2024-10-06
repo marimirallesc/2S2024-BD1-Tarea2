@@ -48,7 +48,6 @@ def logout_empleado():
 def index(userId, buscar):
     return render_template('index.html', userId=userId, buscar=buscar) 
 
-#@app.route('/listar_empleados/<int:userId>/<buscar>', methods=['GET'])
 @app.route('/listar_empleados/<int:userId>/<buscar>', methods=['GET'])
 @app.route('/listar_empleados/<int:userId>/', defaults={'buscar': ''}, methods=['GET'])
 def listar_empleados(userId, buscar):
@@ -105,7 +104,7 @@ def insertar_empleado():
         user = data.get('user')
         nombre = data.get('nombre')
         puesto = data.get('puesto')
-        vdi = data.get('vdi')
+        vdi = data.get('identificacion')
         
         db = MssqlConnection()
         resultado = db.insertarEmpleado(user, vdi, nombre, puesto)
@@ -154,19 +153,34 @@ def actualizar_empleado():
         print(f"Error al actualizar empleado: {e}")
         return {'success': False, 'message': "Error al actualizar empleado"}, 500  # Devuelve un error
 
-@app.route('/eliminar/<int:empleado_id>', methods=['POST'])
-def eliminar_empleado(empleado_id):
+@app.route('/eliminar/<int:userId>/<int:empleado_id>', methods=['POST'])
+def eliminar_empleado(userId, empleado_id):
     try:
-        # Supongamos que el UserId es 1, ajusta según tu lógica de usuarios.
-        userId = 1
         db = MssqlConnection()
-        
+
         # Llamar al método para eliminar el empleado
         resultado = db.eliminarEmpleado(userId, empleado_id)
 
         # Verifica si la eliminación fue exitosa
         if resultado == 0:
             return jsonify({'message': 'Empleado eliminado exitosamente.'})
+        else:
+            return jsonify({'success': False, 'message': db.descripcionError(resultado)}), 401
+    except Exception as e:
+        print(f"Error al eliminar empleado: {e}")
+        return jsonify({'message': 'Error en el servidor.'}), 500
+
+@app.route('/intento_eliminar/<int:userId>/<int:empleado_id>', methods=['POST'])
+def intento_eliminar_empleado(userId, empleado_id):
+    try:
+        db = MssqlConnection()
+        
+        # Llamar al método para eliminar el empleado
+        resultado = db.intentoEliminarEmpleado(userId, empleado_id)
+
+        # Verifica si la eliminación fue exitosa
+        if resultado == 0:
+            return jsonify({}), 200
         else:
             return jsonify({'success': False, 'message': db.descripcionError(resultado)}), 401
     except Exception as e:
@@ -230,15 +244,14 @@ def insertar_movimiento():
         data = request.json
         userId = data.get('userId')
         empleadoId = data.get('empleadoId')
-        vdi = data.get('vdi')
         tipoMovimiento = data.get('tipoMovimiento')
         monto = data.get('monto')
-        montoOriginal = data.get('montoOriginal')
-        nuevoSaldo = data.get('nuevoSaldo')
+
+        print(userId, empleadoId, tipoMovimiento, monto)
 
         db = MssqlConnection()
 
-        resultado = db.insertarMovimiento(userId, empleadoId, tipoMovimiento, montoOriginal)
+        resultado = db.insertarMovimiento(userId, empleadoId, tipoMovimiento, monto)
 
         if resultado == 0:
             return jsonify({'success': True})

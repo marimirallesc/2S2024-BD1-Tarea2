@@ -5,11 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
         event.preventDefault(); // Previene el envío normal del formulario
 
         try {
-            const valid = validaciones();   // Realizar validaciones 
-            if (!valid) {   
-                console.log('Error datos de entrada incorrectos');
-                return;     // Si las validaciones fallan, detener la ejecucion
-            }
 
             const user = document.getElementById('userId').value;
             const empleadoId = document.getElementById('empleadoId').value;
@@ -33,14 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 body: JSON.stringify({ user, empleadoId, nombre, puesto, identificacion })
             });
-
-            // Borrar??? -> Muestra el mensaje de error mal
-            //if (!response.ok) {
-            //    const errorText = await response.text(); // Ver el texto de la respuesta del servidor en caso de error
-            //    console.error('Error en la respuesta del servidor:', errorText);
-            //    alert('Error al actualizar el empleado: ' + errorText);
-            //    return;
-            //}
 
             const result = await response.json();
 
