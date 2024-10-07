@@ -27,6 +27,7 @@
             <label for="tipoMovimiento">Tipo de Movimiento:</label>
             <input type="hidden" id="tipos" name="tipos" value="{{ tipoMovimiento }}" required>
             <select id="tipoMovimiento" name="tipoMovimiento" required>
+                <option value="" disabled selected hidden>Seleccione el tipo de movimiento</option>
                 {% for tipo in tipoMovimiento %}
                 <option value="{{ tipo.Id }}">{{ tipo.Nombre }}</option>
                 {% endfor %}

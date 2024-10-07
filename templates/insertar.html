@@ -22,6 +22,7 @@
             <label for="puesto">Puesto:</label>
             <input type="hidden" id="puestos" name="puestos" value="{{ puestos }}" required>
             <select id="puesto" name="puesto" required>
+                <option value="" disabled selected hidden>Seleccione el Puesto</option>
                 {% for puesto in puestos %}
                 <option value="{{ puesto.Id }}">{{ puesto.Nombre }}</option>
                 {% endfor %}
@@ -29,7 +30,7 @@
             
             <div class="buttons">
                 <button type="submit">Insertar Empleado</button>
-                <button onclick="index()">Regresar</button>
+                <button type="button" onclick="index()">Regresar</button>
                 <script>
                     function index() {
                         const userId = document.getElementById('userId').value;

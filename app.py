@@ -65,22 +65,7 @@ def listar_empleados(userId, buscar):
 def consultar_empleado(userId, empleado_vdi):
     try:
         db = MssqlConnection()
-        empleado = db.listarEmpleados(userId, buscar=str(empleado_vdi))  # Busca el empleado por el VDI
-
-        # Verificar si se obtuvo un resultado válido
-        if empleado and len(empleado) > 0:
-            return render_template('consultar.html', empleado=empleado[0], userId=userId)
-        else:
-            return render_template('index.html', error="Empleado no encontrado")
-    except Exception as e:
-        print(f"Error al obtener empleado: {e}")
-        return render_template('index.html', error="Error al obtener empleado")
-    
-@app.route('/buscar/<int:userId>/<buscar>', methods=['GET'])
-def buscar(userId, buscar):
-    try:
-        db = MssqlConnection()
-        empleado = db.listarEmpleados(userId, buscar=str(buscar))  # Busca el empleado por el ID
+        empleado = db.consultarEmpleado(userId, buscar=str(empleado_vdi))  # Busca el empleado por el VDI
 
         # Verificar si se obtuvo un resultado válido
         if empleado and len(empleado) > 0:
@@ -120,7 +105,7 @@ def insertar_empleado():
 def editar_empleado(userId, empleado_id):
     try:
         db = MssqlConnection()
-        empleado = db.listarEmpleados(userId, buscar=str(empleado_id))  # Busca el empleado por el ValorDocumentoIdentidad
+        empleado = db.consultarEmpleado(userId, buscar=str(empleado_id))  # Busca el empleado por el ValorDocumentoIdentidad
         puestos = db.listarPuestos()
 
         if empleado and len(empleado) > 0:
@@ -191,7 +176,7 @@ def intento_eliminar_empleado(userId, empleado_id):
 def movimientos(userId, empleado_vdi):
     try:
         db = MssqlConnection()
-        empleado = db.listarEmpleados(userId, buscar=str(empleado_vdi))  # Busca el empleado por el VDI
+        empleado = db.consultarEmpleado(userId, buscar=str(empleado_vdi))  # Busca el empleado por el VDI
 
         # Verificar si se obtuvo un resultado válido
         if empleado and len(empleado) > 0:
@@ -226,7 +211,7 @@ def insertar_movimiento(userId, empleado_vdi):
     try:
         db = MssqlConnection()
         tipoMovimiento = db.listarTipoMovimientos()
-        empleado = db.listarEmpleados(userId, buscar=str(empleado_vdi))  # Busca el empleado por el VDI
+        empleado = db.consultarEmpleado(userId, buscar=str(empleado_vdi))  # Busca el empleado por el VDI
 
         # Verificar si se obtuvo un resultado válido
         if empleado and len(empleado) > 0:

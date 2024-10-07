@@ -35,6 +35,22 @@ h1 {
     background-color: #dbedff;
 }
 
+.movimientos-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.movimientos-table th, .movimientos-table td {
+    border: 1px solid #dbedff;
+    padding: 8px;
+    text-align: center;
+}
+
+.movimientos-table th {
+    background-color: #dbedff;
+}
+
 button {
     display: inline-block;
     padding: 10px 15px;
@@ -49,20 +65,12 @@ button {
 }
 
 button:hover {
-    background-color: #8993ff;
+    background-color: #7a82e0;
 }
 
-form label {
-    display: block;
-    margin: 10px 0 5px;
-}
-
-form input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+button:active {
+    background-color: #5a6bb3;
+    transform: translateY(2px);
 }
 
 .buttons {
@@ -72,3 +80,36 @@ form input {
 .buttons button {
     margin: 0 10px;
 }
+
+form label {
+    display: block;
+    margin: 10px 0 5px;
+}
+
+form input {
+    width: 98%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    border-radius: 5px;
+}
+form input:focus {
+    background-color: #fff;
+}
+
+form input:not(:placeholder-shown) {
+    background-color: #fff;
+}
+
+select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 25px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fff;
+    font-size: 16px;
+    color: #333;
+}
+
