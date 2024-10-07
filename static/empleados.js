@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 row.innerHTML = `
                     <td>${empleado.ValorDocumentoIdentidad}</td>
                     <td>${empleado.Nombre}</td>
+                    <td>${empleado.SaldoVacaciones}</td>
                     <td>
                         <button onclick="window.location.href='/consultar/${userId}/${empleado.ValorDocumentoIdentidad}'">Consultar</button>           
                         <button onclick="window.location.href='/editar/${userId}/${empleado.ValorDocumentoIdentidad}'">Editar</button>

@@ -15,8 +15,18 @@ DELETE dbo.Usuario;
 DELETE dbo.Error;	
 DBCC CHECKIDENT ('Error', RESEED, 0);
 
--- Cargar el archivo XML: Datos.xml
-DECLARE @xmlDatos XML;
+DECLARE @xmlDatos XML -- Variable utilizada para cargar el archivo
+	, @lo INT = 1	-- Variables utilizadas para insertar los movimientos
+	, @hi INT
+    , @IdEmpleado INT
+    , @IdTipoMovimiento INT
+    , @Fecha DATE
+    , @Monto MONEY
+    , @IdPostByUser INT
+    , @PostInIp VARCHAR(32)
+    , @PostTime DATETIME;
+
+-- Cargar el archivo XML: DatosTarea2.xml
 SET @xmlDatos = (
     SELECT CAST(BulkColumn AS XML) 
     FROM OPENROWSET(
@@ -33,7 +43,6 @@ SELECT
     ,P.value('@SalarioxHora', 'MONEY')
 FROM @xmlDatos.nodes('/Datos/Puestos/Puesto') AS Puestos(P);
 
-
 -- Cargar los datos de TiposEventos
 INSERT INTO [dbo].[TipoEvento] 
 	([Id]
@@ -42,7 +51,6 @@ SELECT
     TE.value('@Id', 'INT')
     ,TE.value('@Nombre', 'VARCHAR(64)')
 FROM @xmlDatos.nodes('/Datos/TiposEvento/TipoEvento') AS TiposEventos(TE);
-
 
 -- Cargar los datos de TiposMovimientos
 INSERT INTO [dbo].[TipoMovimiento] 
@@ -55,7 +63,6 @@ SELECT
     ,TM.value('@TipoAccion', 'VARCHAR(10)')
 FROM @xmlDatos.nodes('/Datos/TiposMovimientos/TipoMovimiento') AS TiposMovimientos(TM);
 
-
 -- Cargar los datos de Usuarios
 INSERT INTO [dbo].[Usuario] 
 	([Id]
@@ -67,7 +74,6 @@ SELECT
     ,U.value('@Pass', 'VARCHAR(64)')
 FROM @xmlDatos.nodes('/Datos/Usuarios/usuario') AS Usuarios(U);
 
-
 -- Cargar los datos de Errores
 INSERT INTO [dbo].[Error]
 	([Codigo]
@@ -76,7 +82,6 @@ SELECT
     Er.value('@Codigo', 'INT')
     ,Er.value('@Descripcion', 'VARCHAR(128)')
 FROM @xmlDatos.nodes('/Datos/Error/error') AS Errores(Er);
-
 
 -- Cargar los datos de Empleados
 -- Primero se usa una tabla variable para cargar los datos del XML
@@ -109,8 +114,9 @@ SELECT
 	, E.Nombre
 	, E.FechaContratacion
 FROM @Empleado E
-INNER JOIN dbo.Puesto P on E.Puesto = P.Nombre; 
+INNER JOIN dbo.Puesto P ON E.Puesto = P.Nombre; 
 -- Usamos el nombre del puesto para mapear y obtener el id del puesto
+
 
 -- Cargar los datos de Movimientos
 -- Primero se usa una tabla variable para cargar los datos del XML
@@ -168,22 +174,12 @@ SELECT
 	, PostInIp
 	, PostTime
 FROM @Movimiento M
-INNER JOIN dbo.Empleado E on E.ValorDocumentoIdentidad = M.ValorDocId
-INNER JOIN dbo.TipoMovimiento TM on TM.Nombre = M.IdTipoMovimiento
-INNER JOIN dbo.Usuario U on U.Username = M.PostByUser;
+INNER JOIN dbo.Empleado E ON E.ValorDocumentoIdentidad = M.ValorDocId
+INNER JOIN dbo.TipoMovimiento TM ON TM.Nombre = M.IdTipoMovimiento
+INNER JOIN dbo.Usuario U ON U.Username = M.PostByUser
+ORDER BY PostTime;
 
-DECLARE @lo INT = 1;
-DECLARE @hi INT;
-SELECT @hi = MAX(Sec) from @Movimientos;
-
-DECLARE @IdEmpleado INT;
-DECLARE @IdTipoMovimiento INT;
-DECLARE @Fecha DATE;
-DECLARE @Monto MONEY;
-DECLARE @IdPostByUser INT;
-DECLARE @PostInIp VARCHAR(32);
-DECLARE @PostTime DATETIME;
-
+SELECT @hi = MAX(Sec) FROM @Movimientos;
 -- Se itera sobre la tabla @Movimentos, llamando a un SP
 -- que incerta cada movimiento de uno en uno
 WHILE (@lo <= @hi)
